@@ -5,6 +5,10 @@ import ru.ylab.tasks.task1.model.User;
 import ru.ylab.tasks.task1.security.AuthService;
 import ru.ylab.tasks.task1.service.AuditService;
 
+/**
+ * Контроллер, управляющий авторизацией и регистрацией пользователей.
+ * Вызывает методы {@link AuthService} и записывает действия через {@link AuditService}.
+ */
 public class UserController {
 
     private final AuthService auth;
@@ -15,6 +19,9 @@ public class UserController {
         this.audit = audit;
     }
 
+    /**
+     * Выполняет вход пользователя в систему.
+     */
     public boolean login(String login, String password) {
         boolean success = auth.login(login, password);
         if (success) {
@@ -25,6 +32,10 @@ public class UserController {
         return success;
     }
 
+    /**
+     * Выход текущего пользователя.
+     * Логирует событие и очищает текущую сессию.
+     */
     public void logout() {
         if (auth.isAuthenticated()) {
             audit.log("Пользователь вышел: " + auth.getCurrentUserLogin());
@@ -32,6 +43,10 @@ public class UserController {
         auth.logout();
     }
 
+    /**
+     * Регистрирует нового пользователя с заданной ролью.
+     * Если это первый пользователь — автоматически получает роль ADMIN.
+     */
     public boolean register(String login, String password, String requestedRole) {
         Role assignedRole = auth.determineAssignedRole(requestedRole);
         boolean ok = auth.register(login, password, requestedRole);

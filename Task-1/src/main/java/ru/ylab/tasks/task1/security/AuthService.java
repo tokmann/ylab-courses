@@ -6,6 +6,10 @@ import ru.ylab.tasks.task1.repository.UserRepository;
 
 import java.util.Optional;
 
+/**
+ * Сервис авторизации и регистрации пользователей.
+ * Управляет текущей сессией пользователя и его ролью.
+ */
 public class AuthService {
 
     private final UserRepository userRepository = new UserRepository();
@@ -24,6 +28,11 @@ public class AuthService {
         currentUser = null;
     }
 
+
+    /**
+     * Регистрирует нового пользователя.
+     * Если это первый пользователь — присваивается роль ADMIN.
+     */
     public boolean register(String login, String password, String requestedRole) {
         if (login == null || login.isEmpty()) return false;
         if (userRepository.existsByLogin(login)) return false;
@@ -46,6 +55,10 @@ public class AuthService {
         return currentUser;
     }
 
+    /**
+     * Определяет, какую роль присвоить пользователю при регистрации.
+     * Первый зарегистрированный пользователь — всегда ADMIN.
+     */
     public Role determineAssignedRole(String requestedRole) {
         if (userRepository.getAll().isEmpty()) {
             return Role.ADMIN;

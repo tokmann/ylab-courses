@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 import java.util.Scanner;
 import java.util.UUID;
 
+
+/**
+ * Утилитный класс для безопасного чтения данных из консоли.
+ * Содержит методы для ввода строк, чисел и UUID с валидацией и подсказками.
+ */
 public class ConsoleUtils {
 
     public static String readNonEmptyString(Scanner sc, String prompt) {

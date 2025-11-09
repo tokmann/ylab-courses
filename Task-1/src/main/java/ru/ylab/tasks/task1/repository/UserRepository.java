@@ -4,9 +4,12 @@ import ru.ylab.tasks.task1.constant.Role;
 import ru.ylab.tasks.task1.model.User;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Репозиторий для хранения и управления пользователями.
+ * Работает с внутренней мапой и сохраняет данные в файл users.txt.
+ */
 public class UserRepository {
 
     private final Map<String, User> users = new HashMap<>();
@@ -28,6 +31,10 @@ public class UserRepository {
         return users.containsKey(login);
     }
 
+    /**
+     * Загружает пользователей из файла.
+     * Формат строки: login|password|role
+     */
     public void loadFromFile() {
         File file = new File(FILE_NAME);
         if (!file.exists()) return;
@@ -44,6 +51,9 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Сохраняет всех пользователей в файл.
+     */
     public void saveToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (User u : users.values()) {

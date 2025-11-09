@@ -11,6 +11,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Контроллер управления товарами.
+ * Делегирует операции {@link ProductService} и фиксирует события через {@link AuditService}.
+ */
 public class ProductController {
 
     private final ProductService productService;
@@ -47,6 +51,10 @@ public class ProductController {
         return res;
     }
 
+    /**
+     * Проверяет, что пользователь — администратор.
+     * Если нет, выбрасывает исключение.
+     */
     public void checkAdmin(User user) {
         if (user.getRole() != Role.ADMIN) {
             throw new RuntimeException("Нет прав для выполнения этой операции. Только ADMIN.");

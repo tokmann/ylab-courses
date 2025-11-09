@@ -1,25 +1,25 @@
 package ru.ylab.tasks.task1.ui;
 
-import ru.ylab.tasks.task1.constant.Role;
 import ru.ylab.tasks.task1.controller.ProductController;
 import ru.ylab.tasks.task1.controller.UserController;
 import ru.ylab.tasks.task1.model.Product;
 import ru.ylab.tasks.task1.model.User;
-import ru.ylab.tasks.task1.repository.UserRepository;
 import ru.ylab.tasks.task1.security.AuthService;
 import ru.ylab.tasks.task1.service.AuditService;
 import ru.ylab.tasks.task1.service.ProductService;
 import ru.ylab.tasks.task1.util.SearchFilter;
 
-import java.io.PrintStream;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
 import static ru.ylab.tasks.task1.util.ConsoleUtils.*;
 
+/**
+ * Консольный интерфейс для взаимодействия пользователя с системой управления товарами.
+ * Реализует аутентификацию, регистрацию, операции CRUD над товарами и поиск.
+ */
 public class ConsoleUI {
 
     public static void main(String[] args) {
@@ -33,10 +33,12 @@ public class ConsoleUI {
         ProductController productController = new ProductController(productService, audit);
         UserController userController = new UserController(authService, audit);
 
+        // Загрузка сохранённых данных пользователей и товаров
         authService.loadFromFile();
         productService.loadFromFile();
 
         while (true) {
+            // Если пользователь не вошёл — показываем меню доступа
             if (!userController.isAuthenticated()) {
                 System.out.println("\n=== ДОСТУП ===");
                 System.out.println("1. Войти");
@@ -73,6 +75,7 @@ public class ConsoleUI {
                 }
             }
 
+            // Если пользователь вошел - показываем меню действий
             User currentUser = userController.currentUser();
             System.out.println("\n=== МЕНЮ ===");
             System.out.println("1. Добавить товар");
@@ -101,6 +104,9 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Добавление нового товара (только для ADMIN)
+     */
     private static void add(Scanner sc, ProductController ctrl, User user) {
         try {
             ctrl.checkAdmin(user);
@@ -115,6 +121,9 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Обновление товара по UUID (только для ADMIN)
+     */
     private static void update(Scanner sc, ProductController ctrl, User user) {
         try {
             ctrl.checkAdmin(user);
@@ -130,6 +139,9 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Удаление товара по UUID (только для ADMIN)
+     */
     private static void delete(Scanner sc, ProductController ctrl, User user) {
         try {
             ctrl.checkAdmin(user);
@@ -148,6 +160,9 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Поиск товаров по фильтрам: ключевое слово, категория, бренд, диапазон цен
+     */
     private static void search(Scanner sc, ProductController ctrl) {
         System.out.print("Ключевое слово (Enter если нет): "); String kw = sc.nextLine();
         System.out.print("Категория (Enter если нет): "); String cat = sc.nextLine();
@@ -155,6 +170,7 @@ public class ConsoleUI {
         BigDecimal minPrice = readBigDecimal(sc, "Мин. цена (Enter если нет): ", true);
         BigDecimal maxPrice = readBigDecimal(sc, "Макс. цена (Enter если нет): ", true);
 
+        // Формирование фильтра поиска
         SearchFilter f = new SearchFilter(
                 kw.isEmpty() ? null : kw,
                 cat.isEmpty() ? null : cat,
@@ -171,6 +187,9 @@ public class ConsoleUI {
         System.out.print("Найдено " + res.size() + " товаров за " + (endTime - startTime) + " мс");
     }
 
+    /**
+     * Сохраняет все данные перед завершением работы приложения
+     */
     private static void saveData(ProductService productService, AuthService authService) {
         productService.saveToFile();
         authService.saveToFile();

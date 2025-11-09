@@ -2,6 +2,10 @@ package ru.ylab.tasks.task1.model;
 
 import ru.ylab.tasks.task1.constant.Role;
 
+/**
+ * Модель пользователя системы.
+ * Содержит логин, пароль и роль (USER или ADMIN).
+ */
 public class User {
 
     private final String login;

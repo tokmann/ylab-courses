@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Модель товара.
+ * Содержит основную информацию о продукте и поддерживает обновление данных.
+ */
 public class Product {
 
     private final UUID id;
@@ -22,6 +26,10 @@ public class Product {
         this.description = description;
     }
 
+    /**
+     * Конструктор для продукта с уже существующим UUID.
+     * Используется при загрузке из файла.
+     */
     public Product(UUID id, String name, String category, String brand, BigDecimal price, String description) {
         this.id = id;
         this.name = name;
@@ -55,6 +63,10 @@ public class Product {
         return description;
     }
 
+    /**
+     * Обновляет все поля продукта.
+     * Используется при редактировании существующего товара.
+     */
     public void update(String name, String category, String brand, BigDecimal price, String description) {
         this.name = name;
         this.category = category;

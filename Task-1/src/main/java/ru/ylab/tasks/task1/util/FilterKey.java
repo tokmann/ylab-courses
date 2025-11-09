@@ -3,6 +3,11 @@ package ru.ylab.tasks.task1.util;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * Класс-ключ для кэширования результатов поиска товаров.
+ * Основан на параметрах фильтра {@link SearchFilter},
+ * чтобы кэш возвращал одинаковый результат для одинаковых запросов.
+ */
 public class FilterKey {
 
     private final String keyword;
@@ -11,6 +16,9 @@ public class FilterKey {
     private final BigDecimal minPrice;
     private final BigDecimal maxPrice;
 
+    /**
+     * Создаёт ключ фильтра из объекта {@link SearchFilter}.
+     */
     public FilterKey(SearchFilter f) {
         this.keyword = f.keyword;
         this.category = f.category;

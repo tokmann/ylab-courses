@@ -6,6 +6,11 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 
+/**
+ * Репозиторий товаров.
+ * Хранит продукты в памяти и поддерживает индексы по категориям, брендам и ценам.
+ * Обеспечивает быстрое чтение и поиск.
+ */
 public class ProductRepository {
 
     private final Map<UUID, Product> productsById = new HashMap<>();
@@ -38,6 +43,10 @@ public class ProductRepository {
         return productsById.values();
     }
 
+    /**
+     * Загружает продукты из файла.
+     * Формат строки: id|name|category|brand|price|description
+     */
     public void loadFromFile() {
         File file = new File(FILE_NAME);
         if (!file.exists()) return;
@@ -62,6 +71,9 @@ public class ProductRepository {
         }
     }
 
+    /**
+     * Сохраняет все продукты в файл.
+     */
     public void saveToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (Product p : productsById.values()) {
@@ -73,10 +85,12 @@ public class ProductRepository {
         }
     }
 
+    /** Добавляет ID продукта в индекс по ключу */
     private <K> void index(Map<K, Set<UUID>> map, K key, UUID id) {
         map.computeIfAbsent(key, k -> new HashSet<>()).add(id);
     }
 
+    /** Удаляет ID продукта из индекса */
     private <K> void remove(Map<K, Set<UUID>> map, K key, UUID id) {
         Set<UUID> set = map.get(key);
         if (set != null) {
@@ -85,6 +99,7 @@ public class ProductRepository {
         }
     }
 
+    // Геттеры для индексов
     public Map<String, Set<UUID>> getIndexByCategory() {
         return indexByCategory;
     }
