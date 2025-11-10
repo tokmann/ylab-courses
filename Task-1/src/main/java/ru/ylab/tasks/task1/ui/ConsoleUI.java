@@ -37,7 +37,7 @@ public class ConsoleUI {
         UserRepository userRepository = new InMemoryUserRepository();
         AuthService authService = new AuthService(userRepository);
 
-        ProductController productController = new ProductController(productService, audit);
+        ProductController productController = new ProductController(productService, authService, audit);
         UserController userController = new UserController(authService, audit);
 
         // Загрузка сохранённых данных пользователей и товаров
@@ -96,9 +96,9 @@ public class ConsoleUI {
             String choice = scanner.nextLine();
 
             switch (choice) {
-                case "1" -> add(scanner, productController, currentUser);
-                case "2" -> update(scanner, productController, currentUser);
-                case "3" -> delete(scanner, productController, currentUser);
+                case "1" -> add(scanner, productController, authService, currentUser);
+                case "2" -> update(scanner, productController, authService, currentUser);
+                case "3" -> delete(scanner, productController, authService, currentUser);
                 case "4" -> productController.getAllProducts().forEach(System.out::println);
                 case "5" -> search(scanner, productController);
                 case "6" -> userController.logout();
@@ -114,9 +114,9 @@ public class ConsoleUI {
     /**
      * Добавление нового товара (только для ADMIN)
      */
-    private static void add(Scanner sc, ProductController ctrl, User user) {
+    private static void add(Scanner sc, ProductController ctrl, AuthService authService, User user) {
         try {
-            ctrl.checkAdmin(user);
+            authService.checkAdmin(user);
             String name = readNonEmptyString(sc, "Название: ");
             String cat = readNonEmptyString(sc, "Категория: ");
             String brand = readNonEmptyString(sc, "Бренд: ");
@@ -131,9 +131,9 @@ public class ConsoleUI {
     /**
      * Обновление товара по UUID (только для ADMIN)
      */
-    private static void update(Scanner sc, ProductController ctrl, User user) {
+    private static void update(Scanner sc, ProductController ctrl, AuthService authService, User user) {
         try {
-            ctrl.checkAdmin(user);
+            authService.checkAdmin(user);
             UUID id = readUUID(sc, "ID товара: ");
             String name = readNonEmptyString(sc, "Новое название: ");
             String cat = readNonEmptyString(sc, "Новая категория: ");
@@ -149,9 +149,9 @@ public class ConsoleUI {
     /**
      * Удаление товара по UUID (только для ADMIN)
      */
-    private static void delete(Scanner sc, ProductController ctrl, User user) {
+    private static void delete(Scanner sc, ProductController ctrl, AuthService authService, User user) {
         try {
-            ctrl.checkAdmin(user);
+            authService.checkAdmin(user);
             List<Product> allProducts = ctrl.getAllProducts();
             if (allProducts.isEmpty()) {
                 System.out.println("Нет товаров для удаления.");

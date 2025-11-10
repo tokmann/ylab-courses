@@ -78,6 +78,16 @@ public class AuthService {
         }
     }
 
+    /**
+     * Проверяет, что пользователь — администратор.
+     * Если нет, выбрасывает исключение.
+     */
+    public void checkAdmin(User user) {
+        if (user.getRole() != Role.ADMIN) {
+            throw new RuntimeException("Нет прав для выполнения этой операции. Только ADMIN.");
+        }
+    }
+
     public void saveToFile() {
         userRepository.saveToFile();
     }
