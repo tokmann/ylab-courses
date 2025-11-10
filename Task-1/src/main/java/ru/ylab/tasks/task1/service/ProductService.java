@@ -1,6 +1,7 @@
 package ru.ylab.tasks.task1.service;
 
 import ru.ylab.tasks.task1.model.Product;
+import ru.ylab.tasks.task1.repository.InMemoryProductRepository;
 import ru.ylab.tasks.task1.repository.ProductRepository;
 import ru.ylab.tasks.task1.util.FilterKey;
 import ru.ylab.tasks.task1.util.SearchFilter;
@@ -16,8 +17,12 @@ import java.util.stream.Collectors;
  */
 public class ProductService {
 
-    private final ProductRepository repo = new ProductRepository();
+    private final ProductRepository repo;
     private final LruCache<FilterKey, List<Product>> cache = new LruCache<>(50);
+
+    public ProductService(ProductRepository repository) {
+        this.repo = repository;
+    }
 
     public void create(Product p) {
         repo.save(p);

@@ -4,6 +4,10 @@ import ru.ylab.tasks.task1.controller.ProductController;
 import ru.ylab.tasks.task1.controller.UserController;
 import ru.ylab.tasks.task1.model.Product;
 import ru.ylab.tasks.task1.model.User;
+import ru.ylab.tasks.task1.repository.InMemoryProductRepository;
+import ru.ylab.tasks.task1.repository.InMemoryUserRepository;
+import ru.ylab.tasks.task1.repository.ProductRepository;
+import ru.ylab.tasks.task1.repository.UserRepository;
 import ru.ylab.tasks.task1.security.AuthService;
 import ru.ylab.tasks.task1.service.AuditService;
 import ru.ylab.tasks.task1.service.ProductService;
@@ -27,8 +31,11 @@ public class ConsoleUI {
 
         AuditService audit = new AuditService();
 
-        ProductService productService = new ProductService();
-        AuthService authService = new AuthService();
+        ProductRepository productRepository = new InMemoryProductRepository();
+        ProductService productService = new ProductService(productRepository);
+
+        UserRepository userRepository = new InMemoryUserRepository();
+        AuthService authService = new AuthService(userRepository);
 
         ProductController productController = new ProductController(productService, audit);
         UserController userController = new UserController(authService, audit);

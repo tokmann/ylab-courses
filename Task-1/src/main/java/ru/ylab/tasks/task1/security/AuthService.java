@@ -2,6 +2,7 @@ package ru.ylab.tasks.task1.security;
 
 import ru.ylab.tasks.task1.constant.Role;
 import ru.ylab.tasks.task1.model.User;
+import ru.ylab.tasks.task1.repository.InMemoryUserRepository;
 import ru.ylab.tasks.task1.repository.UserRepository;
 
 import java.util.Optional;
@@ -12,8 +13,12 @@ import java.util.Optional;
  */
 public class AuthService {
 
-    private final UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository;
     private User currentUser;
+
+    public AuthService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public boolean login(String login, String password) {
         Optional<User> user = userRepository.findByLogin(login);
