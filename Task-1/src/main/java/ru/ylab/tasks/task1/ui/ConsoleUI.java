@@ -11,6 +11,8 @@ import ru.ylab.tasks.task1.repository.UserRepository;
 import ru.ylab.tasks.task1.security.AuthService;
 import ru.ylab.tasks.task1.service.AuditService;
 import ru.ylab.tasks.task1.service.ProductService;
+import ru.ylab.tasks.task1.service.persistence.ProductFileService;
+import ru.ylab.tasks.task1.service.persistence.UserFileService;
 import ru.ylab.tasks.task1.util.SearchFilter;
 
 import java.math.BigDecimal;
@@ -31,18 +33,21 @@ public class ConsoleUI {
 
         AuditService audit = new AuditService();
 
-        ProductRepository productRepository = new InMemoryProductRepository();
-        ProductService productService = new ProductService(productRepository);
+        // Загрузка продуктов
+        ProductFileService productFileService = new ProductFileService("products.txt");
+        List<Product> loadedProducts = productFileService.loadProducts();
+        ProductRepository productRepository = new InMemoryProductRepository(loadedProducts);
 
-        UserRepository userRepository = new InMemoryUserRepository();
+        // Загрузка пользователей
+        UserFileService userFileService = new UserFileService("products.txt");
+        List<User> loadedUsers = userFileService.loadUsers();
+        UserRepository userRepository = new InMemoryUserRepository(loadedUsers);
+
+        ProductService productService = new ProductService(productRepository);
         AuthService authService = new AuthService(userRepository);
 
         ProductController productController = new ProductController(productService, authService, audit);
         UserController userController = new UserController(authService, audit);
-
-        // Загрузка сохранённых данных пользователей и товаров
-        authService.loadFromFile();
-        productService.loadFromFile();
 
         while (true) {
             // Если пользователь не вошёл — показываем меню доступа
@@ -73,7 +78,7 @@ public class ConsoleUI {
                         continue;
                     }
                 } else if ("0".equals(choice)) {
-                    saveData(productService, authService);
+                    saveData(productFileService, userFileService);
                     System.out.println("Выход...");
                     return;
                 } else {
@@ -103,7 +108,7 @@ public class ConsoleUI {
                 case "5" -> search(scanner, productController);
                 case "6" -> userController.logout();
                 case "0" -> {
-                    saveData(productService, authService);
+                    saveData(productFileService, userFileService, productRepository, userRepository);
                     return;
                 }
                 default -> System.out.println("Неверный выбор");
@@ -122,7 +127,8 @@ public class ConsoleUI {
             String brand = readNonEmptyString(sc, "Бренд: ");
             BigDecimal price = readBigDecimal(sc, "Цена: ", false);
             String desc = readNonEmptyString(sc, "Описание: ");
-            ctrl.addProduct(name, cat, brand, price, desc);
+            Product product = new Product(name, cat, brand, price, desc);
+            ctrl.addProduct(product);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -197,9 +203,10 @@ public class ConsoleUI {
     /**
      * Сохраняет все данные перед завершением работы приложения
      */
-    private static void saveData(ProductService productService, AuthService authService) {
-        productService.saveToFile();
-        authService.saveToFile();
+    private static void saveData(ProductFileService productFileService, UserFileService userFileService,
+                                 ProductRepository productRepository, UserRepository userRepository) {
+        productFileService.saveProducts(productRepository.findAll());
+        userFileService.saveUsers(userRepository.findAll());
         System.out.println("Данные сохранены.");
         System.out.println("Выход...");
     }

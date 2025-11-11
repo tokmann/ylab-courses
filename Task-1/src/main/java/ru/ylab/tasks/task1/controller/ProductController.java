@@ -28,10 +28,9 @@ public class ProductController {
         this.audit = audit;
     }
 
-    public void addProduct(String name, String category, String brand, BigDecimal price, String desc) {
-        Product p = new Product(name, category, brand, price, desc);
-        productService.create(p);
-        audit.log("Добавлен товар: " + p.getName());
+    public void addProduct(Product product) {
+        productService.create(product);
+        audit.log("Добавлен товар: " + product.getName());
     }
 
     public void updateProduct(UUID id, String name, String category, String brand, BigDecimal price, String desc) {

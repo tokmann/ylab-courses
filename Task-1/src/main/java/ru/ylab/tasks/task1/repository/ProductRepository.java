@@ -13,6 +13,4 @@ public interface ProductRepository {
     Map<String, Set<UUID>> getIndexByCategory();
     Map<String, Set<UUID>> getIndexByBrand();
     NavigableMap<BigDecimal, Set<UUID>> getPriceIndex();
-    void loadFromFile();
-    void saveToFile();
 }

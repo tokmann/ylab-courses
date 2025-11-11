@@ -18,7 +18,9 @@ public class InMemoryProductRepository implements ProductRepository {
     private final Map<String, Set<UUID>> indexByBrand = new HashMap<>();
     private final TreeMap<BigDecimal, Set<UUID>> priceIndex = new TreeMap<>();
 
-    private final String FILE_NAME = "products.txt";
+    public InMemoryProductRepository(Collection<Product> initialProducts) {
+        initialProducts.forEach(this::save);
+    }
 
     @Override
     public void save(Product p) {
@@ -45,50 +47,6 @@ public class InMemoryProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findAll() {
         return productsById.values();
-    }
-
-    /**
-     * Загружает продукты из файла.
-     * Формат строки: id|name|category|brand|price|description
-     */
-    @Override
-    public void loadFromFile() {
-        File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length < 6) continue;
-                Product p = new Product(
-                        UUID.fromString(parts[0]),
-                        parts[1],
-                        parts[2],
-                        parts[3],
-                        new BigDecimal(parts[4]),
-                        parts[5]
-                );
-                save(p);
-            }
-        } catch (IOException e) {
-            System.out.println("Ошибка загрузки продуктов: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Сохраняет все продукты в файл.
-     */
-    @Override
-    public void saveToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (Product p : productsById.values()) {
-                writer.write(p.getId() + "|" + p.getName() + "|" + p.getCategory() + "|" + p.getBrand() + "|" + p.getPrice() + "|" + p.getDescription().replace("\n", " "));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Ошибка сохранения продуктов: " + e.getMessage());
-        }
     }
 
     /** Добавляет ID продукта в индекс по ключу */

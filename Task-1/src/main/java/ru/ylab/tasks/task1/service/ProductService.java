@@ -102,12 +102,4 @@ public class ProductService {
         cache.put(key, filtered);
         return filtered;
     }
-
-    public void saveToFile() {
-        repo.saveToFile();
-    }
-
-    public void loadFromFile() {
-        repo.loadFromFile();
-    }
 }

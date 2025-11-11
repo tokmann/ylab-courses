@@ -65,7 +65,7 @@ public class AuthService {
      * Первый зарегистрированный пользователь — всегда ADMIN.
      */
     public Role determineAssignedRole(String requestedRole) {
-        if (userRepository.getAll().isEmpty()) {
+        if (userRepository.findAll().isEmpty()) {
             return Role.ADMIN;
         }
         if (requestedRole == null || requestedRole.isEmpty()) {
@@ -88,11 +88,4 @@ public class AuthService {
         }
     }
 
-    public void saveToFile() {
-        userRepository.saveToFile();
-    }
-
-    public void loadFromFile() {
-        userRepository.loadFromFile();
-    }
 }
