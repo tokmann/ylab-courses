@@ -1,6 +1,7 @@
 package ru.ylab.tasks.task1.service.persistence;
 
 import ru.ylab.tasks.task1.model.Product;
+import ru.ylab.tasks.task1.service.AuditService;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -30,7 +31,10 @@ public class ProductFileService {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length < 6) continue;
+                if (parts.length < 6) {
+                    System.out.println("Строка " + line + " пропущена: некорректный формат");
+                    continue;
+                }
                 Product p = new Product(
                         UUID.fromString(parts[0]),
                         parts[1],
@@ -42,7 +46,7 @@ public class ProductFileService {
                 products.add(p);
             }
         } catch (IOException e) {
-            System.out.println("Ошибка загрузки продуктов: " + e.getMessage());
+            System.err.println("Ошибка загрузки продуктов: " + e.getMessage());
         }
         return products;
     }
@@ -57,7 +61,7 @@ public class ProductFileService {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Ошибка сохранения продуктов: " + e.getMessage());
+            System.err.println("Ошибка сохранения продуктов: " + e.getMessage());
         }
     }
 }

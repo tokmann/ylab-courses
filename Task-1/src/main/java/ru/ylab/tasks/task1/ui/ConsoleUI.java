@@ -78,7 +78,7 @@ public class ConsoleUI {
                         continue;
                     }
                 } else if ("0".equals(choice)) {
-                    saveData(productFileService, userFileService);
+                    saveData(productFileService, userFileService, productRepository, userRepository);
                     System.out.println("Выход...");
                     return;
                 } else {
@@ -130,7 +130,7 @@ public class ConsoleUI {
             Product product = new Product(name, cat, brand, price, desc);
             ctrl.addProduct(product);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -148,7 +148,7 @@ public class ConsoleUI {
             String desc = readNonEmptyString(sc, "Новое описание: ");
             ctrl.updateProduct(id, name, cat, brand, price, desc);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -169,7 +169,7 @@ public class ConsoleUI {
             UUID id = readUUID(sc, "Введите UUID товара для удаления: ");
             ctrl.deleteProduct(id);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 

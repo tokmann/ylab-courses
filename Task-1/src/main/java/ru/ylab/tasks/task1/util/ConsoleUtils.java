@@ -29,7 +29,7 @@ public class ConsoleUtils {
             try {
                 return new BigDecimal(input);
             } catch (NumberFormatException e) {
-                System.out.println("Ошибка: введите корректное число.");
+                System.err.println("Ошибка: введите корректное число.");
             }
         }
     }
@@ -41,7 +41,7 @@ public class ConsoleUtils {
             try {
                 return UUID.fromString(input);
             } catch (IllegalArgumentException e) {
-                System.out.println("Ошибка: введите корректный UUID. Пример: 550e8400-e29b-41d4-a716-446655440000");
+                System.err.println("Ошибка: введите корректный UUID. Пример: 550e8400-e29b-41d4-a716-446655440000");
             }
         }
     }

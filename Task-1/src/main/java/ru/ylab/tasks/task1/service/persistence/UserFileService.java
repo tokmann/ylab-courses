@@ -29,11 +29,14 @@ public class UserFileService {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length < 3) continue;
+                if (parts.length < 3) {
+                    System.out.println("Строка " + line + " пропущена: некорректный формат");
+                    continue;
+                }
                 users.add(new User(parts[0], parts[1], Role.valueOf(parts[2])));
             }
         } catch (IOException e) {
-            System.out.println("Ошибка загрузки пользователей: " + e.getMessage());
+            System.err.println("Ошибка загрузки пользователей: " + e.getMessage());
         }
         return users;
     }
@@ -48,7 +51,7 @@ public class UserFileService {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Ошибка сохранения пользователей: " + e.getMessage());
+            System.err.println("Ошибка сохранения пользователей: " + e.getMessage());
         }
     }
 }
