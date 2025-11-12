@@ -1,8 +1,6 @@
 package ru.ylab.tasks.task1.controller;
 
-import ru.ylab.tasks.task1.constant.Role;
 import ru.ylab.tasks.task1.model.Product;
-import ru.ylab.tasks.task1.model.User;
 import ru.ylab.tasks.task1.security.AuthService;
 import ru.ylab.tasks.task1.service.AuditService;
 import ru.ylab.tasks.task1.service.ProductService;
@@ -11,6 +9,9 @@ import ru.ylab.tasks.task1.util.SearchFilter;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+
+import static ru.ylab.tasks.task1.constant.AuditMessages.*;
+
 
 /**
  * Контроллер управления товарами.
@@ -30,17 +31,17 @@ public class ProductController {
 
     public void addProduct(Product product) {
         productService.create(product);
-        audit.log("Добавлен товар: " + product.getName());
+        audit.log(String.format(PRODUCT_ADDED, authService.getCurrentUserLogin(), product.getName()));
     }
 
     public void updateProduct(UUID id, String name, String category, String brand, BigDecimal price, String desc) {
         productService.update(id, name, category, brand, price, desc);
-        audit.log("Изменен товар: " + id);
+        audit.log(String.format(PRODUCT_UPDATED, authService.getCurrentUserLogin(), id));
     }
 
     public void deleteProduct(UUID id) {
         productService.delete(id);
-        audit.log("Удален товар: " + id);
+        audit.log(String.format(PRODUCT_DELETED, authService.getCurrentUserLogin(), id));
     }
 
     public List<Product> getAllProducts() {
@@ -49,7 +50,7 @@ public class ProductController {
 
     public List<Product> searchProducts(SearchFilter filter) {
         List<Product> res = productService.search(filter);
-        audit.log("Поиск товаров");
+        audit.log(String.format(PRODUCT_SEARCH, authService.getCurrentUserLogin()));
         return res;
     }
 }

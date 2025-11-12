@@ -23,7 +23,11 @@ public class AuthService {
 
     public boolean login(String login, String password) {
         return userRepository.findByLogin(login)
-                .map(user -> user.getPassword().equals(password))
+                .filter(user -> user.getPassword().equals(password))
+                .map(user -> {
+                    currentUser = user;
+                    return true;
+                })
                 .orElse(false);
     }
 

@@ -1,6 +1,6 @@
 package ru.ylab.tasks.task1.constant;
 
-public class ConsoleUIConstants {
+public final class ConsoleUIConstants {
 
     private ConsoleUIConstants() {}
 

@@ -58,11 +58,11 @@ public class ProductFileService {
     public void saveProducts(Collection<Product> products) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Product p : products) {
-                writer.write(p.getId() + DELIMETER +
-                        p.getName() + DELIMETER +
-                        p.getCategory() + DELIMETER +
-                        p.getBrand() + DELIMETER +
-                        p.getPrice() + DELIMETER +
+                writer.write(p.getId() + DELIMITER +
+                        p.getName() + DELIMITER +
+                        p.getCategory() + DELIMITER +
+                        p.getBrand() + DELIMITER +
+                        p.getPrice() + DELIMITER +
                         p.getDescription().replace("\n", " "));
                 writer.newLine();
             }

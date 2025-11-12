@@ -9,19 +9,11 @@ import java.math.BigDecimal;
  * Используется для передачи критериев поиска в {@link ProductService} и
  * формирования ключа {@link FilterKey} при кэшировании результатов.
  */
-public class SearchFilter {
+public record SearchFilter (
+    String keyword,
+    String category,
+    String brand,
+    BigDecimal minPrice,
+    BigDecimal maxPrice
 
-    public String keyword;
-    public String category;
-    public String brand;
-    public BigDecimal minPrice;
-    public BigDecimal maxPrice;
-
-    public SearchFilter(String keyword, String category, String brand, BigDecimal minPrice, BigDecimal maxPrice) {
-        this.keyword = keyword;
-        this.category = category;
-        this.brand = brand;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
-    }
-}
+) {}

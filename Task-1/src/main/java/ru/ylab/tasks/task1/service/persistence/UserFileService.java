@@ -49,8 +49,8 @@ public class UserFileService {
     public void saveUsers(Collection<User> users) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (User u : users) {
-                writer.write(u.getLogin() + DELIMETER +
-                        u.getPassword() + DELIMETER +
+                writer.write(u.getLogin() + DELIMITER +
+                        u.getPassword() + DELIMITER +
                         u.getRole());
                 writer.newLine();
             }

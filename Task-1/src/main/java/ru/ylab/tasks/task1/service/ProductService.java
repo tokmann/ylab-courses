@@ -70,21 +70,21 @@ public class ProductService {
     }
 
     private List<Product> filterByCategory(List<Product> candidates, SearchFilter f) {
-        if (f.category == null) return candidates;
+        if (f.category() == null) return candidates;
         return candidates.stream()
-                .filter(p -> p.getCategory().equalsIgnoreCase(f.category))
+                .filter(p -> p.getCategory().equalsIgnoreCase(f.category()))
                 .toList();
     }
 
     private List<Product> filterByBrand(List<Product> candidates, SearchFilter f) {
-        if (f.brand == null) return candidates;
+        if (f.brand() == null) return candidates;
         return candidates.stream()
-                .filter(p -> p.getBrand().equalsIgnoreCase(f.brand))
+                .filter(p -> p.getBrand().equalsIgnoreCase(f.brand()))
                 .toList();
     }
 
     private List<Product> filterByPriceRange(List<Product> candidates, SearchFilter f) {
-        if (f.minPrice == null && f.maxPrice == null) return candidates;
+        if (f.minPrice() == null && f.maxPrice() == null) return candidates;
 
         Optional<BigDecimal> repoMin = repo.getMinPrice();
         Optional<BigDecimal> repoMax = repo.getMaxPrice();
@@ -93,8 +93,8 @@ public class ProductService {
             return Collections.emptyList();
         }
 
-        BigDecimal min = f.minPrice != null ? f.minPrice : repoMin.get();
-        BigDecimal max = f.maxPrice != null ? f.maxPrice : repoMax.get();
+        BigDecimal min = f.minPrice() != null ? f.minPrice() : repoMin.get();
+        BigDecimal max = f.maxPrice() != null ? f.maxPrice() : repoMax.get();
 
         if (min.compareTo(max) > 0) {
             return Collections.emptyList();
@@ -106,9 +106,9 @@ public class ProductService {
     }
 
     private List<Product> filterByKeyword(List<Product> candidates, SearchFilter f) {
-        if (f.keyword == null || f.keyword.isBlank()) return candidates;
+        if (f.keyword() == null || f.keyword().isBlank()) return candidates;
 
-        String keyword = f.keyword.toLowerCase();
+        String keyword = f.keyword().toLowerCase();
 
         return candidates.stream()
                 .filter(p -> p.getName().toLowerCase().contains(keyword)

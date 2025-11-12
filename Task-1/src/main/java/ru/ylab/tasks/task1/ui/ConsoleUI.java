@@ -69,13 +69,9 @@ public class ConsoleUI {
     private void showAuthMenu() {
         String menu = """
             
-            === МЕНЮ ===
-            1. Добавить товар
-            2. Изменить товар
-            3. Удалить товар
-            4. Просмотреть все товары
-            5. Поиск товаров
-            6. Выйти из аккаунта
+            === ДОСТУП ===
+            1. Войти
+            2. Зарегистрироваться
             0. Выход
             """;
         System.out.print(menu + "Ваш выбор: "); String choice = scanner.nextLine();
@@ -92,9 +88,13 @@ public class ConsoleUI {
         User currentUser = userController.currentUser();
         String menu = """
             
-            === ДОСТУП ===
-            1. Войти
-            2. Зарегистрироваться
+            === МЕНЮ ===
+            1. Добавить товар
+            2. Изменить товар
+            3. Удалить товар
+            4. Просмотреть все товары
+            5. Поиск товаров
+            6. Выйти из аккаунта
             0. Выход
             """;
         System.out.print(menu + "Выбор: ");  String choice = scanner.nextLine();

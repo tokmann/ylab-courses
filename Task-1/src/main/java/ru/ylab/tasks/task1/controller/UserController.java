@@ -1,9 +1,12 @@
 package ru.ylab.tasks.task1.controller;
 
+import ru.ylab.tasks.task1.constant.AuditMessages;
 import ru.ylab.tasks.task1.constant.Role;
 import ru.ylab.tasks.task1.model.User;
 import ru.ylab.tasks.task1.security.AuthService;
 import ru.ylab.tasks.task1.service.AuditService;
+
+import static ru.ylab.tasks.task1.constant.AuditMessages.*;
 
 /**
  * Контроллер, управляющий авторизацией и регистрацией пользователей.
@@ -25,9 +28,9 @@ public class UserController {
     public boolean login(String login, String password) {
         boolean success = auth.login(login, password);
         if (success) {
-            audit.log("Пользователь вошел: " + login);
+            audit.log(String.format(LOGIN_SUCCESS, login));
         } else {
-            audit.log("Неудачная попытка входа: " + login);
+            audit.log(String.format(LOGIN_FAILED, login));
         }
         return success;
     }
@@ -38,7 +41,7 @@ public class UserController {
      */
     public void logout() {
         if (auth.isAuthenticated()) {
-            audit.log("Пользователь вышел: " + auth.getCurrentUserLogin());
+            audit.log(String.format(LOGOUT_SUCCESS, auth.getCurrentUserLogin()));
         }
         auth.logout();
     }
@@ -51,9 +54,9 @@ public class UserController {
         Role assignedRole = auth.determineAssignedRole(requestedRole);
         boolean ok = auth.register(login, password, requestedRole);
         if (ok) {
-            audit.log("Новый пользователь зарегистрирован: " + login + " (role=" + assignedRole + ")");
+            audit.log(String.format(AuditMessages.USER_REGISTERED, login, assignedRole));
         } else {
-            audit.log("Неудачная попытка регистрации: " + login);
+            audit.log(String.format(AuditMessages.USER_REGISTER_FAILED, login));
         }
         return ok;
     }
