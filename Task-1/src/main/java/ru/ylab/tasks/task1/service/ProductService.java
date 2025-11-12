@@ -54,52 +54,46 @@ public class ProductService {
      * Использует индексы и кеширование для повышения производительности.
      */
     public List<Product> search(SearchFilter f) {
-        // Генерируем ключ фильтра для кеша
         FilterKey key = new FilterKey(f);
-
-        // Проверяем, есть ли уже готовый результат поиска
         List<Product> cached = cache.get(key);
         if (cached != null) return cached;
 
-        // Начинаем с полного набора ID всех товаров
-        Set<UUID> result = new HashSet<>(repo.findAll().stream()
-                .map(Product::getId)
-                .collect(Collectors.toSet()));
+        List<Product> candidates = new ArrayList<>(repo.findAll());
 
-        // Фильтрация по категории
         if (f.category != null)
-            result.retainAll(repo.getIndexByCategory().getOrDefault(f.category, Set.of()));
+            candidates.retainAll(repo.findByCategory(f.category));
 
-        // Фильтрация по бренду
         if (f.brand != null)
-            result.retainAll(repo.getIndexByBrand().getOrDefault(f.brand, Set.of()));
+            candidates.retainAll(repo.findByBrand(f.brand));
 
-        // Фильтрация по диапазону цен
         if (f.minPrice != null || f.maxPrice != null) {
-            BigDecimal min = f.minPrice != null ? f.minPrice : repo.getPriceIndex().firstKey();
-            BigDecimal max = f.maxPrice != null ? f.maxPrice : repo.getPriceIndex().lastKey();
+            Optional<BigDecimal> repoMin = repo.getMinPrice();
+            Optional<BigDecimal> repoMax = repo.getMaxPrice();
 
-            // Получаем поддиапазон из индексной структуры по ценам
-            NavigableMap<BigDecimal, Set<UUID>> sub = repo.getPriceIndex().subMap(min, true, max, true);
-            Set<UUID> priceFiltered = sub.values().stream()
-                    .flatMap(Set::stream)
-                    .collect(Collectors.toSet());
+            if (repoMin.isEmpty() || repoMax.isEmpty()) {
+                cache.put(key, Collections.emptyList());
+                return Collections.emptyList();
+            }
 
-            result.retainAll(priceFiltered);
+            BigDecimal min = f.minPrice != null ? f.minPrice : repoMin.get();
+            BigDecimal max = f.maxPrice != null ? f.maxPrice : repoMax.get();
+
+            if (min.compareTo(max) > 0) {
+                cache.put(key, Collections.emptyList());
+                return Collections.emptyList();
+            }
+
+            candidates.retainAll(repo.findByPriceRange(min, max));
         }
 
-        // Преобразуем ID обратно в объекты Product и фильтруем по ключевому слову
-        List<Product> filtered = result.stream()
-                .map(repo::findById)
-                .filter(Objects::nonNull)
+        List<Product> filtered = candidates.stream()
                 .filter(p -> f.keyword == null ||
                         p.getName().toLowerCase().contains(f.keyword.toLowerCase()) ||
                         p.getDescription().toLowerCase().contains(f.keyword.toLowerCase()) ||
                         p.getCategory().toLowerCase().contains(f.keyword.toLowerCase()) ||
                         p.getBrand().toLowerCase().contains(f.keyword.toLowerCase()))
-                .collect(Collectors.toList());
+                .toList();
 
-        // Сохраняем результат поиска в кеш
         cache.put(key, filtered);
         return filtered;
     }

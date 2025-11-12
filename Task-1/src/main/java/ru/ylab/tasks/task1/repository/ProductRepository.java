@@ -10,7 +10,9 @@ public interface ProductRepository {
     Collection<Product> findAll();
     Product findById(UUID id);
     void delete(UUID id);
-    Map<String, Set<UUID>> getIndexByCategory();
-    Map<String, Set<UUID>> getIndexByBrand();
-    NavigableMap<BigDecimal, Set<UUID>> getPriceIndex();
+    Collection<Product> findByCategory(String brand);
+    Collection<Product> findByBrand(String brand);
+    Collection<Product> findByPriceRange(BigDecimal min, BigDecimal max);
+    Optional<BigDecimal> getMinPrice();
+    Optional<BigDecimal> getMaxPrice();
 }

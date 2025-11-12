@@ -49,6 +49,46 @@ public class InMemoryProductRepository implements ProductRepository {
         return productsById.values();
     }
 
+    @Override
+    public Collection<Product> findByCategory(String category) {
+        Set<UUID> ids = indexByCategory.getOrDefault(category, Set.of());
+        return ids.stream()
+                .map(productsById::get)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Override
+    public Collection<Product> findByBrand(String brand) {
+        Set<UUID> ids = indexByBrand.getOrDefault(brand, Set.of());
+        return ids.stream()
+                .map(productsById::get)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Override
+    public Collection<Product> findByPriceRange(BigDecimal min, BigDecimal max) {
+        NavigableMap<BigDecimal, Set<UUID>> sub = priceIndex.subMap(min, true, max, true);
+        return sub.values().stream()
+                .flatMap(Set::stream)
+                .map(productsById::get)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Override
+    public Optional<BigDecimal> getMinPrice() {
+        if (priceIndex.isEmpty()) return Optional.empty();
+        return Optional.of(priceIndex.firstKey());
+    }
+
+    @Override
+    public Optional<BigDecimal> getMaxPrice() {
+        if (priceIndex.isEmpty()) return Optional.empty();
+        return Optional.of(priceIndex.lastKey());
+    }
+
     /** Добавляет ID продукта в индекс по ключу */
     private <K> void index(Map<K, Set<UUID>> map, K key, UUID id) {
         map.computeIfAbsent(key, k -> new HashSet<>()).add(id);
@@ -61,22 +101,6 @@ public class InMemoryProductRepository implements ProductRepository {
             set.remove(id);
             if (set.isEmpty()) map.remove(key);
         }
-    }
-
-    // Геттеры для индексов
-    @Override
-    public Map<String, Set<UUID>> getIndexByCategory() {
-        return indexByCategory;
-    }
-
-    @Override
-    public Map<String, Set<UUID>> getIndexByBrand() {
-        return indexByBrand;
-    }
-
-    @Override
-    public TreeMap<BigDecimal, Set<UUID>> getPriceIndex() {
-        return priceIndex;
     }
 
 }
