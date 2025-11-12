@@ -1,17 +1,12 @@
 package ru.ylab.tasks.task1.ui;
 
-import ru.ylab.tasks.task1.constant.FileConstants;
 import ru.ylab.tasks.task1.controller.ProductController;
 import ru.ylab.tasks.task1.controller.UserController;
 import ru.ylab.tasks.task1.model.Product;
 import ru.ylab.tasks.task1.model.User;
-import ru.ylab.tasks.task1.repository.InMemoryProductRepository;
-import ru.ylab.tasks.task1.repository.InMemoryUserRepository;
 import ru.ylab.tasks.task1.repository.ProductRepository;
 import ru.ylab.tasks.task1.repository.UserRepository;
 import ru.ylab.tasks.task1.security.AuthService;
-import ru.ylab.tasks.task1.service.AuditService;
-import ru.ylab.tasks.task1.service.ProductService;
 import ru.ylab.tasks.task1.service.persistence.ProductFileService;
 import ru.ylab.tasks.task1.service.persistence.UserFileService;
 import ru.ylab.tasks.task1.util.SearchFilter;
@@ -22,6 +17,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 import static ru.ylab.tasks.task1.util.ConsoleUtils.*;
+import static ru.ylab.tasks.task1.constant.ConsoleUIConstants.*;
 
 /**
  * Консольный интерфейс для взаимодействия пользователя с системой управления товарами.
@@ -81,9 +77,9 @@ public class ConsoleUI {
         System.out.print(menu + "Ваш выбор: "); String choice = scanner.nextLine();
 
         switch (choice) {
-            case "1" -> login();
-            case "2" -> register();
-            case "0" -> exitApp();
+            case MENU_LOGIN -> login();
+            case MENU_REGISTER -> register();
+            case MENU_EXIT -> exitApp();
             default -> System.out.println("Неверный выбор");
         }
     }
@@ -100,13 +96,13 @@ public class ConsoleUI {
         System.out.print(menu + "Выбор: ");  String choice = scanner.nextLine();
 
         switch (choice) {
-            case "1" -> add(currentUser);
-            case "2" -> update(currentUser);
-            case "3" -> delete(currentUser);
-            case "4" -> productController.getAllProducts().forEach(System.out::println);
-            case "5" -> search();
-            case "6" -> userController.logout();
-            case "0" -> exitApp();
+            case MENU_ADD_PRODUCT -> add(currentUser);
+            case MENU_UPDATE_PRODUCT -> update(currentUser);
+            case MENU_DELETE_PRODUCT -> delete(currentUser);
+            case MENU_SHOW_ALL -> productController.getAllProducts().forEach(System.out::println);
+            case MENU_SEARCH -> search();
+            case MENU_LOGOUT -> userController.logout();
+            case MENU_EXIT_APP -> exitApp();
             default -> System.out.println("Неверный выбор");
         }
     }
