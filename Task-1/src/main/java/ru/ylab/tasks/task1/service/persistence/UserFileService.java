@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static ru.ylab.tasks.task1.constant.FileConstants.*;
+
 public class UserFileService {
 
     private final String fileName;
@@ -28,7 +30,7 @@ public class UserFileService {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\|");
+                String[] parts = line.split(SPLIT_REGEX);
                 if (parts.length < 3) {
                     System.out.println("Строка " + line + " пропущена: некорректный формат");
                     continue;
@@ -47,7 +49,9 @@ public class UserFileService {
     public void saveUsers(Collection<User> users) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (User u : users) {
-                writer.write(u.getLogin() + "|" + u.getPassword() + "|" + u.getRole());
+                writer.write(u.getLogin() + DELIMETER +
+                        u.getPassword() + DELIMETER +
+                        u.getRole());
                 writer.newLine();
             }
         } catch (IOException e) {

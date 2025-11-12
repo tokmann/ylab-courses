@@ -1,7 +1,6 @@
 package ru.ylab.tasks.task1.service.persistence;
 
 import ru.ylab.tasks.task1.model.Product;
-import ru.ylab.tasks.task1.service.AuditService;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import static ru.ylab.tasks.task1.constant.FileConstants.*;
 
 public class ProductFileService {
 
@@ -30,7 +31,7 @@ public class ProductFileService {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\|");
+                String[] parts = line.split(SPLIT_REGEX);
                 if (parts.length < 6) {
                     System.out.println("Строка " + line + " пропущена: некорректный формат");
                     continue;
@@ -57,7 +58,12 @@ public class ProductFileService {
     public void saveProducts(Collection<Product> products) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Product p : products) {
-                writer.write(p.getId() + "|" + p.getName() + "|" + p.getCategory() + "|" + p.getBrand() + "|" + p.getPrice() + "|" + p.getDescription().replace("\n", " "));
+                writer.write(p.getId() + DELIMETER +
+                        p.getName() + DELIMETER +
+                        p.getCategory() + DELIMETER +
+                        p.getBrand() + DELIMETER +
+                        p.getPrice() + DELIMETER +
+                        p.getDescription().replace("\n", " "));
                 writer.newLine();
             }
         } catch (IOException e) {

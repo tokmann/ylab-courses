@@ -1,5 +1,6 @@
 package ru.ylab.tasks.task1.ui;
 
+import ru.ylab.tasks.task1.constant.FileConstants;
 import ru.ylab.tasks.task1.controller.ProductController;
 import ru.ylab.tasks.task1.controller.UserController;
 import ru.ylab.tasks.task1.model.Product;
@@ -34,12 +35,12 @@ public class ConsoleUI {
         AuditService audit = new AuditService();
 
         // Загрузка продуктов
-        ProductFileService productFileService = new ProductFileService("products.txt");
+        ProductFileService productFileService = new ProductFileService(FileConstants.PRODUCT_FILE);
         List<Product> loadedProducts = productFileService.loadProducts();
         ProductRepository productRepository = new InMemoryProductRepository(loadedProducts);
 
         // Загрузка пользователей
-        UserFileService userFileService = new UserFileService("products.txt");
+        UserFileService userFileService = new UserFileService(FileConstants.USER_FILE);
         List<User> loadedUsers = userFileService.loadUsers();
         UserRepository userRepository = new InMemoryUserRepository(loadedUsers);
 

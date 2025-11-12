@@ -26,6 +26,7 @@ public class ProductService {
 
     public void create(Product p) {
         repo.save(p);
+
         cache.clear();
     }
 
