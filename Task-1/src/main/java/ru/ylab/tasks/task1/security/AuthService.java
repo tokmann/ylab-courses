@@ -1,6 +1,7 @@
 package ru.ylab.tasks.task1.security;
 
 import ru.ylab.tasks.task1.constant.Role;
+import ru.ylab.tasks.task1.exception.AccessDeniedException;
 import ru.ylab.tasks.task1.model.User;
 import ru.ylab.tasks.task1.repository.InMemoryUserRepository;
 import ru.ylab.tasks.task1.repository.UserRepository;
@@ -21,12 +22,9 @@ public class AuthService {
     }
 
     public boolean login(String login, String password) {
-        Optional<User> user = userRepository.findByLogin(login);
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-            currentUser = user.get();
-            return true;
-        }
-        return false;
+        return userRepository.findByLogin(login)
+                .map(user -> user.getPassword().equals(password))
+                .orElse(false);
     }
 
     public void logout() {
@@ -84,7 +82,7 @@ public class AuthService {
      */
     public void checkAdmin(User user) {
         if (user.getRole() != Role.ADMIN) {
-            throw new RuntimeException("Нет прав для выполнения этой операции. Только ADMIN.");
+            throw new AccessDeniedException("Нет прав для выполнения этой операции. Только ADMIN.");
         }
     }
 
