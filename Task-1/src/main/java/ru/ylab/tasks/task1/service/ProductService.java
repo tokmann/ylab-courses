@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Сервис для работы с товарами.
  * Содержит бизнес-логику CRUD-операций, поиск с фильтрацией и кеширование результатов поиска.
  */
-public class ProductService {
+public class ProductService implements IProductService {
 
     private final ProductRepository repo;
     private final LruCache<FilterKey, List<Product>> cache = new LruCache<>(50);
@@ -24,12 +24,26 @@ public class ProductService {
         this.repo = repository;
     }
 
+    /**
+     * Создает новый товар и очищает кеш.
+     * @param p объект товара для добавления
+     */
+    @Override
     public void create(Product p) {
         repo.save(p);
-
         cache.clear();
     }
 
+    /**
+     * Обновляет существующий товар по идентификатору.
+     * @param id     идентификатор товара
+     * @param name   новое название
+     * @param cat    новая категория
+     * @param brand  новый бренд
+     * @param price  новая цена
+     * @param desc   новое описание
+     */
+    @Override
     public void update(UUID id, String name, String cat, String brand, BigDecimal price, String desc) {
         Product p = repo.findById(id);
         if (p != null) {
@@ -40,11 +54,21 @@ public class ProductService {
         }
     }
 
+    /**
+     * Удаляет товар по ID и очищает кеш.
+     * @param id идентификатор удаляемого товара
+     */
+    @Override
     public void delete(UUID id) {
         repo.delete(id);
         cache.clear();
     }
 
+    /**
+     * Возвращает список всех товаров в системе.
+     * @return список товаров
+     */
+    @Override
     public List<Product> getAll() {
         return new ArrayList<>(repo.findAll());
     }
@@ -53,6 +77,7 @@ public class ProductService {
      * Поиск товаров по фильтрам (ключевое слово, категория, бренд, диапазон цен).
      * Использует индексы и кеширование для повышения производительности.
      */
+    @Override
     public List<Product> search(SearchFilter f) {
         FilterKey key = new FilterKey(f);
         List<Product> cached = cache.get(key);
@@ -69,6 +94,7 @@ public class ProductService {
         return candidates;
     }
 
+    /** Фильтрует список по категории. */
     private List<Product> filterByCategory(List<Product> candidates, SearchFilter f) {
         if (f.category() == null) return candidates;
         return candidates.stream()
@@ -76,6 +102,7 @@ public class ProductService {
                 .toList();
     }
 
+    /** Фильтрует список по бренду. */
     private List<Product> filterByBrand(List<Product> candidates, SearchFilter f) {
         if (f.brand() == null) return candidates;
         return candidates.stream()
@@ -83,6 +110,7 @@ public class ProductService {
                 .toList();
     }
 
+    /** Фильтрует список по диапазону цен с учетом min/max значений. */
     private List<Product> filterByPriceRange(List<Product> candidates, SearchFilter f) {
         if (f.minPrice() == null && f.maxPrice() == null) return candidates;
 
@@ -105,6 +133,7 @@ public class ProductService {
                 .toList();
     }
 
+    /** Фильтрует список по ключевому слову (поиск по названию, описанию, категории и бренду). */
     private List<Product> filterByKeyword(List<Product> candidates, SearchFilter f) {
         if (f.keyword() == null || f.keyword().isBlank()) return candidates;
 

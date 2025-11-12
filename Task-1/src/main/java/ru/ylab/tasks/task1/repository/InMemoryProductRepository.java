@@ -2,7 +2,6 @@ package ru.ylab.tasks.task1.repository;
 
 import ru.ylab.tasks.task1.model.Product;
 
-import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -22,6 +21,10 @@ public class InMemoryProductRepository implements ProductRepository {
         initialProducts.forEach(this::save);
     }
 
+    /**
+     * Сохраняет продукт в репозитории и обновляет индексы.
+     * @param p продукт для сохранения
+     */
     @Override
     public void save(Product p) {
         productsById.put(p.getId(), p);
@@ -30,11 +33,20 @@ public class InMemoryProductRepository implements ProductRepository {
         index(priceIndex, p.getPrice(), p.getId());
     }
 
+    /**
+     * Находит продукт по уникальному идентификатору.
+     * @param id UUID продукта
+     * @return продукт или null, если не найден
+     */
     @Override
     public Product findById(UUID id) {
         return productsById.get(id);
     }
 
+    /**
+     * Удаляет продукт из репозитория и обновляет индексы.
+     * @param id UUID продукта для удаления
+     */
     @Override
     public void delete(UUID id) {
         Product p = productsById.remove(id);
@@ -44,11 +56,20 @@ public class InMemoryProductRepository implements ProductRepository {
         remove(priceIndex, p.getPrice(), id);
     }
 
+    /**
+     * Возвращает все продукты в репозитории.
+     * @return коллекция всех продуктов
+     */
     @Override
     public Collection<Product> findAll() {
         return productsById.values();
     }
 
+    /**
+     * Находит продукты по категории.
+     * @param category категория
+     * @return коллекция продуктов данной категории
+     */
     @Override
     public Collection<Product> findByCategory(String category) {
         Set<UUID> ids = indexByCategory.getOrDefault(category, Set.of());
@@ -58,6 +79,11 @@ public class InMemoryProductRepository implements ProductRepository {
                 .toList();
     }
 
+    /**
+     * Находит продукты по бренду.
+     * @param brand бренд
+     * @return коллекция продуктов данного бренда
+     */
     @Override
     public Collection<Product> findByBrand(String brand) {
         Set<UUID> ids = indexByBrand.getOrDefault(brand, Set.of());
@@ -67,6 +93,12 @@ public class InMemoryProductRepository implements ProductRepository {
                 .toList();
     }
 
+    /**
+     * Находит продукты в указанном диапазоне цен.
+     * @param min минимальная цена
+     * @param max максимальная цена
+     * @return коллекция продуктов в диапазоне
+     */
     @Override
     public Collection<Product> findByPriceRange(BigDecimal min, BigDecimal max) {
         NavigableMap<BigDecimal, Set<UUID>> sub = priceIndex.subMap(min, true, max, true);
@@ -77,12 +109,20 @@ public class InMemoryProductRepository implements ProductRepository {
                 .toList();
     }
 
+    /**
+     * Возвращает минимальную цену среди всех продуктов.
+     * @return минимальная цена или пустой Optional, если продуктов нет
+     */
     @Override
     public Optional<BigDecimal> getMinPrice() {
         if (priceIndex.isEmpty()) return Optional.empty();
         return Optional.of(priceIndex.firstKey());
     }
 
+    /**
+     * Возвращает максимальную цену среди всех продуктов.
+     * @return максимальная цена или пустой Optional, если продуктов нет
+     */
     @Override
     public Optional<BigDecimal> getMaxPrice() {
         if (priceIndex.isEmpty()) return Optional.empty();

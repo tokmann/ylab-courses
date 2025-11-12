@@ -55,7 +55,11 @@ public class ConsoleUI {
         this.metricService = metricService;
     }
 
-    /** Главный цикл работы приложения */
+    /**
+     * Главный цикл работы приложения
+     * В зависимости от статуса авторизации пользователя показывает
+     * либо меню входа, либо основное меню управления товарами.
+     */
     public void start() {
         while (true) {
             if (!userController.isAuthenticated()) {
@@ -66,6 +70,9 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Отображает меню аутентификации (вход/регистрация/выход).
+     */
     private void showAuthMenu() {
         String menu = """
             
@@ -84,6 +91,10 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Отображает основное меню приложения.
+     * Доступные операции зависят от роли пользователя (например, только ADMIN может добавлять и удалять товары).
+     */
     private void showMainMenu() {
         User currentUser = userController.currentUser();
         String menu = """
@@ -111,6 +122,10 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Завершает работу приложения.
+     * Перед завершением сохраняет все данные пользователей и товаров в файлы.
+     */
     private void exitApp() {
         productFileService.saveProducts(productRepository.findAll());
         userFileService.saveUsers(userRepository.findAll());
@@ -118,6 +133,11 @@ public class ConsoleUI {
         System.exit(0);
     }
 
+    /**
+     * Регистрирует нового пользователя.
+     * Первый пользователь в системе получает роль ADMIN автоматически.
+     * Если логин уже занят, регистрация не выполняется.
+     */
     private void register() {
         System.out.print("Желаемый логин: "); String login = scanner.nextLine();
         System.out.print("Пароль: "); String pass = scanner.nextLine();
@@ -130,6 +150,9 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Выполняет вход пользователя по логину и паролю.
+     */
     private void login() {
         System.out.print("Логин: "); String login = scanner.nextLine();
         System.out.print("Пароль: "); String pass = scanner.nextLine();

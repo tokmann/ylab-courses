@@ -11,6 +11,10 @@ import java.util.UUID;
 
 import static ru.ylab.tasks.task1.constant.FileConstants.*;
 
+/**
+ * Сервис для работы с файлами продуктов.
+ * Обеспечивает загрузку и сохранение списка {@link Product} в указанный файл.
+ */
 public class ProductFileService {
 
     private final String fileName;
@@ -22,6 +26,7 @@ public class ProductFileService {
     /**
      * Загружает продукты из файла.
      * Формат строки: id|name|category|brand|price|description
+     * @return список продуктов, загруженных из файла (может быть пустым)
      */
     public List<Product> loadProducts() {
         List<Product> products = new ArrayList<>();

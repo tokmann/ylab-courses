@@ -13,6 +13,13 @@ public final class ConsoleUtils {
 
     private ConsoleUtils() {}
 
+    /**
+     * Считывает непустую строку из консоли.
+     Если пользователь вводит пустую строку, метод выводит сообщение об ошибке и повторяет запрос.
+     * @param sc     используемый для чтения ввода
+     * @param prompt сообщение-приглашение для пользователя
+     * @return введённая непустая строка
+     */
     public static String readNonEmptyString(Scanner sc, String prompt) {
         String line;
         do {
@@ -23,6 +30,13 @@ public final class ConsoleUtils {
         return line;
     }
 
+    /**
+     * Считывает значение типа BigDecimal из консоли.
+     * @param sc          объект для чтения ввода
+     * @param prompt      сообщение-приглашение для пользователя
+     * @param allowEmpty  если true, разрешает пустой ввод
+     * @return корректное значение BigDecimal или null, если пустой ввод разрешён
+     */
     public static BigDecimal readBigDecimal(Scanner sc, String prompt, boolean allowEmpty) {
         while (true) {
             System.out.print(prompt);
@@ -36,6 +50,13 @@ public final class ConsoleUtils {
         }
     }
 
+    /**
+     * Считывает и проверяет значение UUID из консоли.
+     * Если пользователь вводит некорректный UUID, метод выводит сообщение с примером и повторяет ввод.
+     * @param sc     объект для чтения ввода
+     * @param prompt сообщение-приглашение для пользователя
+     * @return корректный объект UUID
+     */
     public static UUID readUUID(Scanner sc, String prompt) {
         while (true) {
             System.out.print(prompt);

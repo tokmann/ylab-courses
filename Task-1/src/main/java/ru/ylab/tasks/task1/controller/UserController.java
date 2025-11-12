@@ -24,6 +24,10 @@ public class UserController {
 
     /**
      * Выполняет вход пользователя в систему.
+     * Логирует успешный или неуспешный вход через {@link AuditService}.
+     * @param login    логин пользователя
+     * @param password пароль пользователя
+     * @return true, если вход успешен; false — иначе
      */
     public boolean login(String login, String password) {
         boolean success = auth.login(login, password);
@@ -37,7 +41,7 @@ public class UserController {
 
     /**
      * Выход текущего пользователя.
-     * Логирует событие и очищает текущую сессию.
+     * Логирует событие выхода и очищает текущую сессию.
      */
     public void logout() {
         if (auth.isAuthenticated()) {
@@ -47,8 +51,13 @@ public class UserController {
     }
 
     /**
-     * Регистрирует нового пользователя с заданной ролью.
+     * Регистрирует нового пользователя.
      * Если это первый пользователь — автоматически получает роль ADMIN.
+     * Логирует успешную регистрацию или неудачную попытку.
+     * @param login         логин нового пользователя
+     * @param password      пароль нового пользователя
+     * @param requestedRole запрашиваемая роль (ADMIN/USER), может быть null
+     * @return true, если регистрация прошла успешно; false — иначе
      */
     public boolean register(String login, String password, String requestedRole) {
         Role assignedRole = auth.determineAssignedRole(requestedRole);
@@ -61,10 +70,18 @@ public class UserController {
         return ok;
     }
 
+    /**
+     * Проверяет, авторизован ли текущий пользователь.
+     * @return true, если пользователь вошел в систему; false — иначе
+     */
     public boolean isAuthenticated() {
         return auth.isAuthenticated();
     }
 
+    /**
+     * Возвращает текущего пользователя.
+     * @return объект {@link User} текущего пользователя, либо null если не авторизован
+     */
     public User currentUser() {
         return auth.getCurrentUser();
     }

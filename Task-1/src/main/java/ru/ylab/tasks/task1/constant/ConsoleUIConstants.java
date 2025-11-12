@@ -1,5 +1,11 @@
 package ru.ylab.tasks.task1.constant;
 
+import ru.ylab.tasks.task1.ui.ConsoleUI;
+
+/**
+ * Константы для консольного интерфейса {@link ConsoleUI}.
+ * Включают коды выбора пунктов меню для авторизации и основной работы с приложением.
+ */
 public final class ConsoleUIConstants {
 
     private ConsoleUIConstants() {}

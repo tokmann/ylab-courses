@@ -1,6 +1,7 @@
 package ru.ylab.tasks.task1.service.persistence;
 
 import ru.ylab.tasks.task1.constant.Role;
+import ru.ylab.tasks.task1.model.Product;
 import ru.ylab.tasks.task1.model.User;
 
 import java.io.*;
@@ -10,6 +11,10 @@ import java.util.List;
 
 import static ru.ylab.tasks.task1.constant.FileConstants.*;
 
+/**
+ * Сервис для работы с файлами пользователей.
+ * Обеспечивает загрузку и сохранение списка {@link User} в указанный файл.
+ */
 public class UserFileService {
 
     private final String fileName;
