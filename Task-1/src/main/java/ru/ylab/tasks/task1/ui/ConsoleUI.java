@@ -29,107 +29,128 @@ import static ru.ylab.tasks.task1.util.ConsoleUtils.*;
  */
 public class ConsoleUI {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    private final ProductController productController;
+    private final UserController userController;
+    private final AuthService authService;
+    private final ProductFileService productFileService;
+    private final UserFileService userFileService;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
-        AuditService audit = new AuditService();
+    private final Scanner scanner = new Scanner(System.in);
 
-        // Загрузка продуктов
-        ProductFileService productFileService = new ProductFileService(FileConstants.PRODUCT_FILE);
-        List<Product> loadedProducts = productFileService.loadProducts();
-        ProductRepository productRepository = new InMemoryProductRepository(loadedProducts);
+    public ConsoleUI(ProductController productController,
+                     UserController userController,
+                     AuthService authService,
+                     ProductFileService productFileService,
+                     UserFileService userFileService,
+                     ProductRepository productRepository,
+                     UserRepository userRepository) {
+        this.productController = productController;
+        this.userController = userController;
+        this.authService = authService;
+        this.productFileService = productFileService;
+        this.userFileService = userFileService;
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+    }
 
-        // Загрузка пользователей
-        UserFileService userFileService = new UserFileService(FileConstants.USER_FILE);
-        List<User> loadedUsers = userFileService.loadUsers();
-        UserRepository userRepository = new InMemoryUserRepository(loadedUsers);
-
-        ProductService productService = new ProductService(productRepository);
-        AuthService authService = new AuthService(userRepository);
-
-        ProductController productController = new ProductController(productService, authService, audit);
-        UserController userController = new UserController(authService, audit);
-
+    /** Главный цикл работы приложения */
+    public void start() {
         while (true) {
-            // Если пользователь не вошёл — показываем меню доступа
             if (!userController.isAuthenticated()) {
-                System.out.println("\n=== ДОСТУП ===");
-                System.out.println("1. Войти");
-                System.out.println("2. Зарегистрироваться");
-                System.out.println("0. Выход");
-                System.out.print("Выбор: ");
-                String choice = scanner.nextLine();
-                if ("1".equals(choice)) {
-                    System.out.print("Логин: "); String login = scanner.nextLine();
-                    System.out.print("Пароль: "); String pass = scanner.nextLine();
-                    if (!userController.login(login, pass)) {
-                        System.out.println("Ошибка входа!");
-                        continue;
-                    }
-                } else if ("2".equals(choice)) {
-                    System.out.print("Желаемый логин: "); String login = scanner.nextLine();
-                    System.out.print("Пароль: "); String pass = scanner.nextLine();
-                    System.out.print("Роль (ADMIN/USER) (Enter для USER, первый пользователь в системе - ADMIN): "); String role = scanner.nextLine();
-                    boolean ok = userController.register(login, pass, role.isEmpty() ? null : role);
-                    if (!ok) {
-                        System.out.println("Регистрация не удалась (возможно логин занят).");
-                        continue;
-                    } else {
-                        System.out.println("Регистрация прошла успешно. Войдите в систему.");
-                        continue;
-                    }
-                } else if ("0".equals(choice)) {
-                    saveData(productFileService, userFileService, productRepository, userRepository);
-                    System.out.println("Выход...");
-                    return;
-                } else {
-                    System.out.println("Неверный выбор");
-                    continue;
-                }
+                showAuthMenu();
+            } else {
+                showMainMenu();
             }
+        }
+    }
 
-            // Если пользователь вошел - показываем меню действий
-            User currentUser = userController.currentUser();
-            System.out.println("\n=== МЕНЮ ===");
-            System.out.println("1. Добавить товар");
-            System.out.println("2. Изменить товар");
-            System.out.println("3. Удалить товар");
-            System.out.println("4. Просмотреть все товары");
-            System.out.println("5. Поиск товаров");
-            System.out.println("6. Выйти из аккаунта");
-            System.out.println("0. Выход");
-            System.out.print("Ваш выбор: ");
-            String choice = scanner.nextLine();
+    private void showAuthMenu() {
+        String menu = """
+            
+            === МЕНЮ ===
+            1. Добавить товар
+            2. Изменить товар
+            3. Удалить товар
+            4. Просмотреть все товары
+            5. Поиск товаров
+            6. Выйти из аккаунта
+            0. Выход
+            """;
+        System.out.print(menu + "Ваш выбор: "); String choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1" -> add(scanner, productController, authService, currentUser);
-                case "2" -> update(scanner, productController, authService, currentUser);
-                case "3" -> delete(scanner, productController, authService, currentUser);
-                case "4" -> productController.getAllProducts().forEach(System.out::println);
-                case "5" -> search(scanner, productController);
-                case "6" -> userController.logout();
-                case "0" -> {
-                    saveData(productFileService, userFileService, productRepository, userRepository);
-                    return;
-                }
-                default -> System.out.println("Неверный выбор");
-            }
+        switch (choice) {
+            case "1" -> login();
+            case "2" -> register();
+            case "0" -> exitApp();
+            default -> System.out.println("Неверный выбор");
+        }
+    }
+
+    private void showMainMenu() {
+        User currentUser = userController.currentUser();
+        String menu = """
+            
+            === ДОСТУП ===
+            1. Войти
+            2. Зарегистрироваться
+            0. Выход
+            """;
+        System.out.print(menu + "Выбор: ");  String choice = scanner.nextLine();
+
+        switch (choice) {
+            case "1" -> add(currentUser);
+            case "2" -> update(currentUser);
+            case "3" -> delete(currentUser);
+            case "4" -> productController.getAllProducts().forEach(System.out::println);
+            case "5" -> search();
+            case "6" -> userController.logout();
+            case "0" -> exitApp();
+            default -> System.out.println("Неверный выбор");
+        }
+    }
+
+    private void exitApp() {
+        productFileService.saveProducts(productRepository.findAll());
+        userFileService.saveUsers(userRepository.findAll());
+        System.out.println("Данные сохранены. Выход...");
+        System.exit(0);
+    }
+
+    private void register() {
+        System.out.print("Желаемый логин: "); String login = scanner.nextLine();
+        System.out.print("Пароль: "); String pass = scanner.nextLine();
+        System.out.print("Роль (ADMIN/USER) (Enter для USER, первый пользователь в системе - ADMIN): "); String role = scanner.nextLine();
+        boolean ok = userController.register(login, pass, role.isEmpty() ? null : role);
+        if (!ok) {
+            System.out.println("Регистрация не удалась (возможно логин занят).");
+        } else {
+            System.out.println("Регистрация прошла успешно. Войдите в систему.");
+        }
+    }
+
+    private void login() {
+        System.out.print("Логин: "); String login = scanner.nextLine();
+        System.out.print("Пароль: "); String pass = scanner.nextLine();
+        if (!userController.login(login, pass)) {
+            System.out.println("Ошибка входа!");
         }
     }
 
     /**
      * Добавление нового товара (только для ADMIN)
      */
-    private static void add(Scanner sc, ProductController ctrl, AuthService authService, User user) {
+    private void add(User user) {
         try {
             authService.checkAdmin(user);
-            String name = readNonEmptyString(sc, "Название: ");
-            String cat = readNonEmptyString(sc, "Категория: ");
-            String brand = readNonEmptyString(sc, "Бренд: ");
-            BigDecimal price = readBigDecimal(sc, "Цена: ", false);
-            String desc = readNonEmptyString(sc, "Описание: ");
+            String name = readNonEmptyString(scanner, "Название: ");
+            String cat = readNonEmptyString(scanner, "Категория: ");
+            String brand = readNonEmptyString(scanner, "Бренд: ");
+            BigDecimal price = readBigDecimal(scanner, "Цена: ", false);
+            String desc = readNonEmptyString(scanner, "Описание: ");
             Product product = new Product(name, cat, brand, price, desc);
-            ctrl.addProduct(product);
+            productController.addProduct(product);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -138,16 +159,16 @@ public class ConsoleUI {
     /**
      * Обновление товара по UUID (только для ADMIN)
      */
-    private static void update(Scanner sc, ProductController ctrl, AuthService authService, User user) {
+    private void update(User user) {
         try {
             authService.checkAdmin(user);
-            UUID id = readUUID(sc, "ID товара: ");
-            String name = readNonEmptyString(sc, "Новое название: ");
-            String cat = readNonEmptyString(sc, "Новая категория: ");
-            String brand = readNonEmptyString(sc, "Новый бренд: ");
-            BigDecimal price = readBigDecimal(sc, "Новая цена: ", false);
-            String desc = readNonEmptyString(sc, "Новое описание: ");
-            ctrl.updateProduct(id, name, cat, brand, price, desc);
+            UUID id = readUUID(scanner, "ID товара: ");
+            String name = readNonEmptyString(scanner, "Новое название: ");
+            String cat = readNonEmptyString(scanner, "Новая категория: ");
+            String brand = readNonEmptyString(scanner, "Новый бренд: ");
+            BigDecimal price = readBigDecimal(scanner, "Новая цена: ", false);
+            String desc = readNonEmptyString(scanner, "Новое описание: ");
+            productController.updateProduct(id, name, cat, brand, price, desc);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -156,10 +177,10 @@ public class ConsoleUI {
     /**
      * Удаление товара по UUID (только для ADMIN)
      */
-    private static void delete(Scanner sc, ProductController ctrl, AuthService authService, User user) {
+    private void delete(User user) {
         try {
             authService.checkAdmin(user);
-            List<Product> allProducts = ctrl.getAllProducts();
+            List<Product> allProducts = productController.getAllProducts();
             if (allProducts.isEmpty()) {
                 System.out.println("Нет товаров для удаления.");
                 return;
@@ -167,8 +188,8 @@ public class ConsoleUI {
             System.out.println("Список товаров:");
             allProducts.forEach(p -> System.out.println(p.toString()));
 
-            UUID id = readUUID(sc, "Введите UUID товара для удаления: ");
-            ctrl.deleteProduct(id);
+            UUID id = readUUID(scanner, "Введите UUID товара для удаления: ");
+            productController.deleteProduct(id);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -177,12 +198,12 @@ public class ConsoleUI {
     /**
      * Поиск товаров по фильтрам: ключевое слово, категория, бренд, диапазон цен
      */
-    private static void search(Scanner sc, ProductController ctrl) {
-        System.out.print("Ключевое слово (Enter если нет): "); String kw = sc.nextLine();
-        System.out.print("Категория (Enter если нет): "); String cat = sc.nextLine();
-        System.out.print("Бренд (Enter если нет): "); String brand = sc.nextLine();
-        BigDecimal minPrice = readBigDecimal(sc, "Мин. цена (Enter если нет): ", true);
-        BigDecimal maxPrice = readBigDecimal(sc, "Макс. цена (Enter если нет): ", true);
+    private void search() {
+        System.out.print("Ключевое слово (Enter если нет): "); String kw = scanner.nextLine();
+        System.out.print("Категория (Enter если нет): "); String cat = scanner.nextLine();
+        System.out.print("Бренд (Enter если нет): "); String brand = scanner.nextLine();
+        BigDecimal minPrice = readBigDecimal(scanner, "Мин. цена (Enter если нет): ", true);
+        BigDecimal maxPrice = readBigDecimal(scanner, "Макс. цена (Enter если нет): ", true);
 
         // Формирование фильтра поиска
         SearchFilter f = new SearchFilter(
@@ -194,22 +215,11 @@ public class ConsoleUI {
         );
 
         long startTime = System.currentTimeMillis();
-        List<Product> res = ctrl.searchProducts(f);
+        List<Product> res = productController.searchProducts(f);
         long endTime = System.currentTimeMillis();
 
         res.forEach(System.out::println);
         System.out.print("Найдено " + res.size() + " товаров за " + (endTime - startTime) + " мс");
-    }
-
-    /**
-     * Сохраняет все данные перед завершением работы приложения
-     */
-    private static void saveData(ProductFileService productFileService, UserFileService userFileService,
-                                 ProductRepository productRepository, UserRepository userRepository) {
-        productFileService.saveProducts(productRepository.findAll());
-        userFileService.saveUsers(userRepository.findAll());
-        System.out.println("Данные сохранены.");
-        System.out.println("Выход...");
     }
 
 }

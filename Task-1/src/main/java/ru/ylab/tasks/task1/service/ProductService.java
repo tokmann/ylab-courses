@@ -60,41 +60,62 @@ public class ProductService {
 
         List<Product> candidates = new ArrayList<>(repo.findAll());
 
-        if (f.category != null)
-            candidates.retainAll(repo.findByCategory(f.category));
+        candidates = filterByCategory(candidates, f);
+        candidates = filterByBrand(candidates, f);
+        candidates = filterByPriceRange(candidates, f);
+        candidates = filterByKeyword(candidates, f);
 
-        if (f.brand != null)
-            candidates.retainAll(repo.findByBrand(f.brand));
+        cache.put(key, candidates);
+        return candidates;
+    }
 
-        if (f.minPrice != null || f.maxPrice != null) {
-            Optional<BigDecimal> repoMin = repo.getMinPrice();
-            Optional<BigDecimal> repoMax = repo.getMaxPrice();
+    private List<Product> filterByCategory(List<Product> candidates, SearchFilter f) {
+        if (f.category == null) return candidates;
+        return candidates.stream()
+                .filter(p -> p.getCategory().equalsIgnoreCase(f.category))
+                .toList();
+    }
 
-            if (repoMin.isEmpty() || repoMax.isEmpty()) {
-                cache.put(key, Collections.emptyList());
-                return Collections.emptyList();
-            }
+    private List<Product> filterByBrand(List<Product> candidates, SearchFilter f) {
+        if (f.brand == null) return candidates;
+        return candidates.stream()
+                .filter(p -> p.getBrand().equalsIgnoreCase(f.brand))
+                .toList();
+    }
 
-            BigDecimal min = f.minPrice != null ? f.minPrice : repoMin.get();
-            BigDecimal max = f.maxPrice != null ? f.maxPrice : repoMax.get();
+    private List<Product> filterByPriceRange(List<Product> candidates, SearchFilter f) {
+        if (f.minPrice == null && f.maxPrice == null) return candidates;
 
-            if (min.compareTo(max) > 0) {
-                cache.put(key, Collections.emptyList());
-                return Collections.emptyList();
-            }
+        Optional<BigDecimal> repoMin = repo.getMinPrice();
+        Optional<BigDecimal> repoMax = repo.getMaxPrice();
 
-            candidates.retainAll(repo.findByPriceRange(min, max));
+        if (repoMin.isEmpty() || repoMax.isEmpty()) {
+            return Collections.emptyList();
         }
 
-        List<Product> filtered = candidates.stream()
-                .filter(p -> f.keyword == null ||
-                        p.getName().toLowerCase().contains(f.keyword.toLowerCase()) ||
-                        p.getDescription().toLowerCase().contains(f.keyword.toLowerCase()) ||
-                        p.getCategory().toLowerCase().contains(f.keyword.toLowerCase()) ||
-                        p.getBrand().toLowerCase().contains(f.keyword.toLowerCase()))
-                .toList();
+        BigDecimal min = f.minPrice != null ? f.minPrice : repoMin.get();
+        BigDecimal max = f.maxPrice != null ? f.maxPrice : repoMax.get();
 
-        cache.put(key, filtered);
-        return filtered;
+        if (min.compareTo(max) > 0) {
+            return Collections.emptyList();
+        }
+
+        return candidates.stream()
+                .filter(p -> p.getPrice().compareTo(min) >= 0 && p.getPrice().compareTo(max) <= 0)
+                .toList();
     }
+
+    private List<Product> filterByKeyword(List<Product> candidates, SearchFilter f) {
+        if (f.keyword == null || f.keyword.isBlank()) return candidates;
+
+        String keyword = f.keyword.toLowerCase();
+
+        return candidates.stream()
+                .filter(p -> p.getName().toLowerCase().contains(keyword)
+                        || p.getDescription().toLowerCase().contains(keyword)
+                        || p.getCategory().toLowerCase().contains(keyword)
+                        || p.getBrand().toLowerCase().contains(keyword))
+                .toList();
+    }
+
 }
