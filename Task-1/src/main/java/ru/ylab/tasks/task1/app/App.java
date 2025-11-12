@@ -11,6 +11,7 @@ import ru.ylab.tasks.task1.repository.ProductRepository;
 import ru.ylab.tasks.task1.repository.UserRepository;
 import ru.ylab.tasks.task1.security.AuthService;
 import ru.ylab.tasks.task1.service.AuditService;
+import ru.ylab.tasks.task1.service.MetricService;
 import ru.ylab.tasks.task1.service.ProductService;
 import ru.ylab.tasks.task1.service.persistence.ProductFileService;
 import ru.ylab.tasks.task1.service.persistence.UserFileService;
@@ -37,11 +38,13 @@ public class App {
         ProductController productController = new ProductController(productService, authService, audit);
         UserController userController = new UserController(authService, audit);
 
+        MetricService metricService = new MetricService();
+
         // Передача зависимостей в UI
         ConsoleUI ui = new ConsoleUI(productController, userController,
                 authService, productFileService,
                 userFileService, productRepository,
-                userRepository);
+                userRepository, metricService);
 
         // запуск интерфейса
         ui.start();

@@ -7,6 +7,7 @@ import ru.ylab.tasks.task1.model.User;
 import ru.ylab.tasks.task1.repository.ProductRepository;
 import ru.ylab.tasks.task1.repository.UserRepository;
 import ru.ylab.tasks.task1.security.AuthService;
+import ru.ylab.tasks.task1.service.MetricService;
 import ru.ylab.tasks.task1.service.persistence.ProductFileService;
 import ru.ylab.tasks.task1.service.persistence.UserFileService;
 import ru.ylab.tasks.task1.util.SearchFilter;
@@ -32,6 +33,7 @@ public class ConsoleUI {
     private final UserFileService userFileService;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final MetricService metricService;
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -41,7 +43,8 @@ public class ConsoleUI {
                      ProductFileService productFileService,
                      UserFileService userFileService,
                      ProductRepository productRepository,
-                     UserRepository userRepository) {
+                     UserRepository userRepository,
+                     MetricService metricService) {
         this.productController = productController;
         this.userController = userController;
         this.authService = authService;
@@ -49,6 +52,7 @@ public class ConsoleUI {
         this.userFileService = userFileService;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.metricService = metricService;
     }
 
     /** Главный цикл работы приложения */
@@ -210,12 +214,13 @@ public class ConsoleUI {
                 maxPrice
         );
 
-        long startTime = System.currentTimeMillis();
-        List<Product> res = productController.searchProducts(f);
-        long endTime = System.currentTimeMillis();
-
+        List<Product> res = metricService.measureExecutionTime(
+                () -> productController.searchProducts(f),
+                "Поиск товаров"
+        );
+        System.out.println("Найдено " + res.size() + " товаров");
         res.forEach(System.out::println);
-        System.out.print("Найдено " + res.size() + " товаров за " + (endTime - startTime) + " мс");
+
     }
 
 }
