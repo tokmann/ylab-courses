@@ -1,14 +1,12 @@
 package ru.ylab.tasks.task1.service;
 
 import ru.ylab.tasks.task1.model.Product;
-import ru.ylab.tasks.task1.repository.InMemoryProductRepository;
 import ru.ylab.tasks.task1.repository.ProductRepository;
 import ru.ylab.tasks.task1.util.FilterKey;
 import ru.ylab.tasks.task1.util.SearchFilter;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**

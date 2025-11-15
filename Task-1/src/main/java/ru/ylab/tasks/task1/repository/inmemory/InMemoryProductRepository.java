@@ -1,6 +1,7 @@
-package ru.ylab.tasks.task1.repository;
+package ru.ylab.tasks.task1.repository.inmemory;
 
 import ru.ylab.tasks.task1.model.Product;
+import ru.ylab.tasks.task1.repository.ProductRepository;
 
 import java.math.BigDecimal;
 import java.util.*;
