@@ -11,6 +11,10 @@ import java.util.Optional;
 
 import static ru.ylab.tasks.task1.constant.SqlConstants.*;
 
+/**
+ * Реализация репозитория пользователей на основе JDBC.
+ * Обеспечивает операции CRUD для пользователей системы.
+ */
 public class JdbcUserRepository implements UserRepository {
 
     private final Connection connection;
@@ -19,6 +23,11 @@ public class JdbcUserRepository implements UserRepository {
         this.connection = connection;
     }
 
+    /**
+     * Сохраняет пользователя в базе данных.
+     * Если пользователь новый (id = null), выполняет вставку, иначе - обновление.
+     * @param user пользователь для сохранения
+     */
     @Override
     public void save(User user) {
         try {
@@ -47,6 +56,11 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * Находит пользователя по идентификатору.
+     * @param id идентификатор пользователя
+     * @return Optional с пользователем, если найден, иначе пустой Optional
+     */
     @Override
     public Optional<User> findById(Long id) {
         try (PreparedStatement ps = connection.prepareStatement(SELECT_USER_BY_ID)) {
@@ -60,6 +74,11 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * Находит пользователя по логину.
+     * @param login логин пользователя
+     * @return Optional с пользователем, если найден, иначе пустой Optional
+     */
     @Override
     public Optional<User> findByLogin(String login) {
         try (PreparedStatement ps = connection.prepareStatement(SELECT_USER_BY_LOGIN)) {
@@ -73,6 +92,10 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * Возвращает всех пользователей из базы данных.
+     * @return список всех пользователей
+     */
     @Override
     public List<User> findAll() {
         try (Statement st = connection.createStatement();
@@ -87,6 +110,11 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * Проверяет существование пользователя с указанным логином.
+     * @param login логин для проверки
+     * @return true если пользователь существует, false в противном случае
+     */
     @Override
     public boolean existsByLogin(String login) {
         try (PreparedStatement ps = connection.prepareStatement(EXISTS_USER_BY_LOGIN)) {
@@ -99,6 +127,11 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * Удаляет пользователя по идентификатору.
+     * @param id идентификатор пользователя для удаления
+     * @return true если пользователь был удален, false если пользователь не найден
+     */
     @Override
     public boolean deleteById(Long id) {
         try (PreparedStatement ps = connection.prepareStatement(DELETE_USER_BY_ID)) {
@@ -109,6 +142,11 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * Преобразует ResultSet в объект User.
+     * @param rs ResultSet с данными пользователя
+     * @return объект User
+     */
     private User mapRow(ResultSet rs) throws SQLException {
         Long id = rs.getLong("id");
         String login = rs.getString("login");

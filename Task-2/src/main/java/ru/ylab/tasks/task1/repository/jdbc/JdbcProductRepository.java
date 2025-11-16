@@ -12,7 +12,10 @@ import java.util.Optional;
 
 import static ru.ylab.tasks.task1.constant.SqlConstants.*;
 
-
+/**
+ * Реализация репозитория продуктов на основе JDBC.
+ * Обеспечивает сохранение, поиск, обновление и удаление продуктов в базе данных.
+ */
 public class JdbcProductRepository implements ProductRepository {
 
     private final Connection connection;
@@ -21,6 +24,11 @@ public class JdbcProductRepository implements ProductRepository {
         this.connection = connection;
     }
 
+    /**
+     * Сохраняет продукт в базе данных.
+     * Если продукт новый (id = null), выполняет вставку, иначе - обновление.
+     * @param product продукт для сохранения
+     */
     @Override
     public void save(Product product) {
         try {
@@ -52,6 +60,10 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
+    /**
+     * Возвращает все продукты из базы данных.
+     * @return коллекция всех продуктов
+     */
     @Override
     public Collection<Product> findAll() {
         List<Product> list = new ArrayList<>();
@@ -66,6 +78,11 @@ public class JdbcProductRepository implements ProductRepository {
         return list;
     }
 
+    /**
+     * Находит продукт по его идентификатору.
+     * @param id идентификатор продукта
+     * @return Optional с продуктом, если найден, иначе пустой Optional
+     */
     @Override
     public Optional<Product> findById(Long id) {
         try (PreparedStatement ps = connection.prepareStatement(SELECT_PRODUCT_BY_ID)) {
@@ -78,6 +95,10 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
+    /**
+     * Удаляет продукт по идентификатору.
+     * @param id идентификатор продукта для удаления
+     */
     @Override
     public void deleteById(Long id) {
         try (PreparedStatement ps = connection.prepareStatement(DELETE_PRODUCT_BY_ID)) {
@@ -88,6 +109,11 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
+    /**
+     * Находит все продукты указанной категории.
+     * @param category категория для поиска
+     * @return коллекция продуктов указанной категории
+     */
     @Override
     public Collection<Product> findByCategory(String category) {
         List<Product> list = new ArrayList<>();
@@ -101,6 +127,11 @@ public class JdbcProductRepository implements ProductRepository {
         return list;
     }
 
+    /**
+     * Находит все продукты указанного бренда.
+     * @param brand бренд для поиска
+     * @return коллекция продуктов указанного бренда
+     */
     @Override
     public Collection<Product> findByBrand(String brand) {
         List<Product> list = new ArrayList<>();
@@ -114,6 +145,12 @@ public class JdbcProductRepository implements ProductRepository {
         return list;
     }
 
+    /**
+     * Находит все продукты в указанном диапазоне цен.
+     * @param min минимальная цена (включительно)
+     * @param max максимальная цена (включительно)
+     * @return коллекция продуктов в указанном ценовом диапазоне
+     */
     @Override
     public Collection<Product> findByPriceRange(BigDecimal min, BigDecimal max) {
         List<Product> list = new ArrayList<>();
@@ -128,6 +165,10 @@ public class JdbcProductRepository implements ProductRepository {
         return list;
     }
 
+    /**
+     * Возвращает минимальную цену среди всех продуктов.
+     * @return Optional с минимальной ценой, или empty если продуктов нет
+     */
     @Override
     public Optional<BigDecimal> getMinPrice() {
         try (Statement st = connection.createStatement();
@@ -139,6 +180,10 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
+    /**
+     * Возвращает максимальную цену среди всех продуктов.
+     * @return Optional с максимальной ценой, или empty если продуктов нет
+     */
     @Override
     public Optional<BigDecimal> getMaxPrice() {
         try (Statement st = connection.createStatement();
@@ -150,6 +195,11 @@ public class JdbcProductRepository implements ProductRepository {
         }
     }
 
+    /**
+     * Преобразует ResultSet в объект Product.
+     * @param rs ResultSet с данными продукта
+     * @return объект Product
+     */
     private Product mapProduct(ResultSet rs) throws SQLException {
         return new Product(
                 rs.getLong("id"),

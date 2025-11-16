@@ -4,10 +4,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Класс для работы с конфигурацией базы данных.
+ * Загружает настройки из файла application.properties и предоставляет к ним доступ.
+ */
 public class DbConfig {
 
     private final Properties props = new Properties();
 
+    /**
+     * Создает новый экземпляр конфигурации.
+     * Загружает настройки из файла application.properties в classpath.
+     */
     public DbConfig() {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("application.properties")) {
             props.load(is);

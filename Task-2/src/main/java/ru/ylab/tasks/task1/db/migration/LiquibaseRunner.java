@@ -12,6 +12,10 @@ import ru.ylab.tasks.task1.db.DbConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * Класс для выполнения миграций базы данных с помощью Liquibase.
+ * Автоматически применяет изменения из changelog файлов к базе данных.
+ */
 public class LiquibaseRunner {
 
     private final DbConfig config;
@@ -20,6 +24,10 @@ public class LiquibaseRunner {
         this.config = config;
     }
 
+    /**
+     * Выполняет обновление базы данных до последней версии.
+     * Применяет все changesets из указанного changelog файла.
+     */
     public void updateDatabase() {
         try (Connection connection = DriverManager.getConnection(
                 config.getUrl(),

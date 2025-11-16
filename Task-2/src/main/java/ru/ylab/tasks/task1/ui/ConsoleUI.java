@@ -210,7 +210,6 @@ public class ConsoleUI {
         BigDecimal minPrice = readBigDecimal(scanner, "Мин. цена (Enter если нет): ", true);
         BigDecimal maxPrice = readBigDecimal(scanner, "Макс. цена (Enter если нет): ", true);
 
-        // Формирование фильтра поиска
         SearchFilter f = new SearchFilter(
                 kw.isEmpty() ? null : kw,
                 cat.isEmpty() ? null : cat,
