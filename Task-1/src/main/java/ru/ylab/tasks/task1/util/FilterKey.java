@@ -20,11 +20,11 @@ public class FilterKey {
      * Создаёт ключ фильтра из объекта {@link SearchFilter}.
      */
     public FilterKey(SearchFilter f) {
-        this.keyword = f.keyword;
-        this.category = f.category;
-        this.brand = f.brand;
-        this.minPrice = f.minPrice;
-        this.maxPrice = f.maxPrice;
+        this.keyword = f.keyword();
+        this.category = f.category();
+        this.brand = f.brand();
+        this.minPrice = f.minPrice();
+        this.maxPrice = f.maxPrice();
     }
 
     @Override
