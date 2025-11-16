@@ -22,18 +22,18 @@
     <changeSet id="7-seed-products" author="tokman">
         <insert tableName="products" schemaName="marketplace">
             <column name="name" value="Laptop X1"/>
-            <column name="category" value="Ноутбуки"/>
+            <column name="category" value="Laptops"/>
             <column name="brand" value="Lenovo"/>
             <column name="price" value="1199.99"/>
-            <column name="description" value="Бизнес ноутбук"/>
+            <column name="description" value="Business laptop"/>
         </insert>
 
         <insert tableName="products" schemaName="marketplace">
             <column name="name" value="iPhone 17"/>
-            <column name="category" value="Смартфоны"/>
+            <column name="category" value="Smartphones"/>
             <column name="brand" value="Apple"/>
             <column name="price" value="899.99"/>
-            <column name="description" value="Последняя модель iPhone"/>
+            <column name="description" value="Last model iPhone"/>
         </insert>
     </changeSet>
 
