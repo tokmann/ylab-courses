@@ -40,5 +40,17 @@ public class DbConfig {
         return props.getProperty("liquibase.change-log");
     }
 
+    public String getDefaultSchema() {
+        return props.getProperty("liquibase.defaultSchemaName");
+    }
+
+    public String getLiquibaseSchema() {
+        return props.getProperty("liquibase.liquibaseSchemaName");
+    }
+
+    public String getInitSchemas() {
+        return props.getProperty("liquibase.init-schemas");
+    }
+
 }
 

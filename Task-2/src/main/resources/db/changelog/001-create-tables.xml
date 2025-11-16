@@ -7,12 +7,25 @@
 
     <!-- Последовательности -->
     <changeSet id="3-create-sequences" author="tokman">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="user_seq" schemaName="marketplace"/>
+            </not>
+            <not>
+                <sequenceExists sequenceName="product_seq" schemaName="marketplace"/>
+            </not>
+        </preConditions>
         <createSequence sequenceName="user_seq" schemaName="marketplace" startValue="1" incrementBy="1"/>
         <createSequence sequenceName="product_seq" schemaName="marketplace" startValue="1" incrementBy="1"/>
     </changeSet>
 
     <!-- Таблица пользователей -->
     <changeSet id="4-create-users-table" author="tokman">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users" schemaName="marketplace"/>
+            </not>
+        </preConditions>
         <createTable tableName="users" schemaName="marketplace">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>
@@ -37,6 +50,11 @@
 
     <!-- Таблица товаров -->
     <changeSet id="5-create-products-table" author="tokman">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="products" schemaName="marketplace"/>
+            </not>
+        </preConditions>
         <createTable tableName="products" schemaName="marketplace">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false"/>

@@ -37,12 +37,25 @@ public class LiquibaseRunner {
 
             Database database = DatabaseFactory.getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
-            Liquibase liquibase = new Liquibase(
+
+            Liquibase liquibaseInit = new Liquibase(
+                    config.getInitSchemas(),
+                    new ClassLoaderResourceAccessor(),
+                    database
+            );
+            liquibaseInit.update(new Contexts(), new LabelExpression());
+
+            database.setDefaultSchemaName(config.getDefaultSchema());
+            database.setLiquibaseSchemaName(config.getLiquibaseSchema());
+
+
+            Liquibase liquibaseMain = new Liquibase(
                     config.getLiquibaseChangelog(),
                     new ClassLoaderResourceAccessor(),
                     database
             );
-            liquibase.update(new Contexts(), new LabelExpression());
+            liquibaseMain.update(new Contexts(), new LabelExpression());
+
         } catch (Exception e) {
             throw new RuntimeException("Ошибка Liquibase: " + e.getMessage(), e);
         }
