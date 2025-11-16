@@ -8,7 +8,6 @@ import ru.ylab.tasks.task1.util.SearchFilter;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import static ru.ylab.tasks.task1.constant.AuditMessages.*;
 

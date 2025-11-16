@@ -10,8 +10,8 @@ public class User {
 
     private Long id;
     private final String login;
-    private final String password;
-    private final Role role;
+    private String password;
+    private Role role;
 
     public User(Long id, String login, String password, Role role) {
         this.id = id;
@@ -43,8 +43,22 @@ public class User {
         return password;
     }
 
+    /**
+     * Для тестов.
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Role getRole() {
         return role;
+    }
+
+    /**
+     * Для тестов.
+     */
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override

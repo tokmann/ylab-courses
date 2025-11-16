@@ -33,9 +33,7 @@ public class JdbcProductRepository implements ProductRepository {
                     ps.setString(5, product.getDescription());
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
-                        if (rs.next()) {
-                            product.setId(rs.getLong("id"));
-                        }
+                        product.setId(rs.getLong("id"));
                     }
                 }
             } else {
