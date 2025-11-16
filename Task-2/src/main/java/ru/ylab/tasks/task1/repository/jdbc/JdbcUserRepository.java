@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.ylab.tasks.task1.constant.SqlConstants.*;
+
 public class JdbcUserRepository implements UserRepository {
 
     private final Connection connection;
@@ -21,9 +23,7 @@ public class JdbcUserRepository implements UserRepository {
     public void save(User user) {
         try {
             if (user.getId() == null) {
-                String sql = "INSERT INTO marketplace.users (login, password, role) " +
-                        "VALUES (?, ?, ?) RETURNING id";
-                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                try (PreparedStatement ps = connection.prepareStatement(INSERT_USER)) {
                     ps.setString(1, user.getLogin());
                     ps.setString(2, user.getPassword());
                     ps.setString(3, user.getRole().name());
@@ -34,8 +34,7 @@ public class JdbcUserRepository implements UserRepository {
                     }
                 }
             } else {
-                String sql = "UPDATE marketplace.users SET login = ?, password = ?, role = ? WHERE id = ?";
-                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                try (PreparedStatement ps = connection.prepareStatement(UPDATE_USER)) {
                     ps.setString(1, user.getLogin());
                     ps.setString(2, user.getPassword());
                     ps.setString(3, user.getRole().name());
@@ -50,8 +49,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-        String sql = "SELECT id, login, password, role FROM marketplace.users WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(SELECT_USER_BY_ID)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return Optional.of(mapRow(rs));
@@ -64,8 +62,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByLogin(String login) {
-        String sql = "SELECT id, login, password, role FROM marketplace.users WHERE login = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(SELECT_USER_BY_LOGIN)) {
             ps.setString(1, login);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return Optional.of(mapRow(rs));
@@ -78,9 +75,8 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        String sql = "SELECT id, login, password, role FROM marketplace.users ORDER BY id";
         try (Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+             ResultSet rs = st.executeQuery(SELECT_ALL_USERS)) {
             List<User> users = new ArrayList<>();
             while (rs.next()) {
                 users.add(mapRow(rs));
@@ -93,8 +89,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public boolean existsByLogin(String login) {
-        String sql = "SELECT 1 FROM marketplace.users WHERE login = ? LIMIT 1";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(EXISTS_USER_BY_LOGIN)) {
             ps.setString(1, login);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
@@ -106,8 +101,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public boolean deleteById(Long id) {
-        String sql = "DELETE FROM marketplace.users WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(DELETE_USER_BY_ID)) {
             ps.setLong(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

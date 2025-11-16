@@ -2,8 +2,6 @@ package ru.ylab.tasks.task1.db;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Properties;
 
 public class DbConfig {
@@ -28,10 +26,6 @@ public class DbConfig {
 
     public String getPassword() {
         return props.getProperty("db.password");
-    }
-
-    public String getSchema() {
-        return props.getProperty("db.schema");
     }
 
     public String getLiquibaseChangelog() {
