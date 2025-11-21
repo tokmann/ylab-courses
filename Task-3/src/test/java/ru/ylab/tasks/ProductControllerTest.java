@@ -3,16 +3,16 @@ package ru.ylab.tasks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.ylab.tasks.task1.constant.Role;
-import ru.ylab.tasks.task1.controller.ProductController;
-import ru.ylab.tasks.task1.model.Product;
-import ru.ylab.tasks.task1.model.User;
-import ru.ylab.tasks.task1.repository.jdbc.JdbcProductRepository;
-import ru.ylab.tasks.task1.repository.jdbc.JdbcUserRepository;
-import ru.ylab.tasks.task1.security.AuthService;
-import ru.ylab.tasks.task1.service.AuditService;
-import ru.ylab.tasks.task1.service.ProductService;
-import ru.ylab.tasks.task1.util.SearchFilter;
+import ru.ylab.tasks.task3.constant.Role;
+import ru.ylab.tasks.task3.controller.ProductController;
+import ru.ylab.tasks.task3.model.Product;
+import ru.ylab.tasks.task3.model.User;
+import ru.ylab.tasks.task3.repository.jdbc.JdbcProductRepository;
+import ru.ylab.tasks.task3.repository.jdbc.JdbcUserRepository;
+import ru.ylab.tasks.task3.security.AuthService;
+import ru.ylab.tasks.task3.service.AuditService;
+import ru.ylab.tasks.task3.service.ProductService;
+import ru.ylab.tasks.task3.controller.util.SearchFilter;
 
 import java.math.BigDecimal;
 import java.util.List;
