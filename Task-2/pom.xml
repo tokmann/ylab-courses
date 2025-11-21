@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.ylab.tasks</groupId>
-    <artifactId>task1</artifactId>
-    <version>0.0.1</version>
+    <artifactId>task2</artifactId>
+    <version>0.0.2</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -30,7 +30,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ru.ylab.tasks.task1.app.App</mainClass>
+                            <mainClass>ru.ylab.tasks.task2.app.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

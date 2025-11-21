@@ -2,11 +2,11 @@ package ru.ylab.tasks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.ylab.tasks.task1.constant.Role;
-import ru.ylab.tasks.task1.controller.UserController;
-import ru.ylab.tasks.task1.repository.jdbc.JdbcUserRepository;
-import ru.ylab.tasks.task1.security.AuthService;
-import ru.ylab.tasks.task1.service.AuditService;
+import ru.ylab.tasks.task2.constant.Role;
+import ru.ylab.tasks.task2.controller.UserController;
+import ru.ylab.tasks.task2.repository.jdbc.JdbcUserRepository;
+import ru.ylab.tasks.task2.security.AuthService;
+import ru.ylab.tasks.task2.service.AuditService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

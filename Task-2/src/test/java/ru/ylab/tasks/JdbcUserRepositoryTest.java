@@ -2,9 +2,9 @@ package ru.ylab.tasks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.ylab.tasks.task1.constant.Role;
-import ru.ylab.tasks.task1.model.User;
-import ru.ylab.tasks.task1.repository.jdbc.JdbcUserRepository;
+import ru.ylab.tasks.task2.constant.Role;
+import ru.ylab.tasks.task2.model.User;
+import ru.ylab.tasks.task2.repository.jdbc.JdbcUserRepository;
 
 import java.util.List;
 import java.util.Optional;

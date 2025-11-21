@@ -1,8 +1,8 @@
 package ru.ylab.tasks;
 
 import org.testcontainers.containers.PostgreSQLContainer;
-import ru.ylab.tasks.task1.db.DbConfig;
-import ru.ylab.tasks.task1.db.migration.LiquibaseRunner;
+import ru.ylab.tasks.task2.db.DbConfig;
+import ru.ylab.tasks.task2.db.migration.LiquibaseRunner;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
