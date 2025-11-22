@@ -1,4 +1,4 @@
-package ru.ylab.tasks.task3.controller.util;
+package ru.ylab.tasks.task3.util;
 
 import java.math.BigDecimal;
 import java.util.Scanner;

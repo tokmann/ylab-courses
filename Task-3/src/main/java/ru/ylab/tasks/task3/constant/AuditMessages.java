@@ -1,6 +1,6 @@
 package ru.ylab.tasks.task3.constant;
 
-import ru.ylab.tasks.task3.service.AuditService;
+import ru.ylab.tasks.task3.service.audit.AuditService;
 
 /**
  * Константы сообщений для аудита действий пользователей.

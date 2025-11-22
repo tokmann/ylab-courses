@@ -5,14 +5,14 @@ import ru.ylab.tasks.task3.controller.UserController;
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.model.User;
 import ru.ylab.tasks.task3.security.AuthService;
-import ru.ylab.tasks.task3.service.MetricService;
-import ru.ylab.tasks.task3.controller.util.SearchFilter;
+import ru.ylab.tasks.task3.service.performance.MetricService;
+import ru.ylab.tasks.task3.util.SearchFilter;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
-import static ru.ylab.tasks.task3.controller.util.ConsoleUtils.*;
+import static ru.ylab.tasks.task3.util.ConsoleUtils.*;
 import static ru.ylab.tasks.task3.constant.ConsoleUIConstants.*;
 
 /**

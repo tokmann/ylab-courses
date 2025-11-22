@@ -7,6 +7,7 @@
     <groupId>ru.ylab.tasks</groupId>
     <artifactId>task3</artifactId>
     <version>0.0.3</version>
+    <packaging>war</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,24 +19,16 @@
         <testcontainers.junit.version>1.21.3</testcontainers.junit.version>
         <assertj.version>3.24.2</assertj.version>
         <junit.version>5.10.0</junit.version>
+        <jackson-databind.version>2.20.0</jackson-databind.version>
+        <jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
+        <aspectj-version>1.9.7</aspectj-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
 
     <build>
         <finalName>homeWorkThree</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>ru.ylab.tasks.task3.app.App</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
@@ -44,9 +37,9 @@
                     <complianceLevel>16</complianceLevel>
                     <source>16</source>
                     <target>16</target>
-                    <showWeaveInfo>16</showWeaveInfo>
+                    <showWeaveInfo>true</showWeaveInfo>
                     <verbose>true</verbose>
-                    <Xlint>ignore</Xlint>
+                    <Xlint>warning</Xlint>
                     <encoding>UTF-8</encoding>
                 </configuration>
                 <executions>
@@ -62,15 +55,28 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.20.0</version>
+            <version>${jackson-databind.version}</version>
         </dependency>
 
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.1.0</version>
+            <version>${jakarta-servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
 

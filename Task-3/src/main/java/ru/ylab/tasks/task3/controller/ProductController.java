@@ -2,9 +2,9 @@ package ru.ylab.tasks.task3.controller;
 
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.security.AuthService;
-import ru.ylab.tasks.task3.service.AuditService;
-import ru.ylab.tasks.task3.service.ProductService;
-import ru.ylab.tasks.task3.controller.util.SearchFilter;
+import ru.ylab.tasks.task3.service.audit.AuditService;
+import ru.ylab.tasks.task3.service.product.ProductService;
+import ru.ylab.tasks.task3.util.SearchFilter;
 
 import java.math.BigDecimal;
 import java.util.List;

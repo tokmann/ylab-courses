@@ -1,4 +1,4 @@
-package ru.ylab.tasks.task3.service;
+package ru.ylab.tasks.task3.service.performance;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

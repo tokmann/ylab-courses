@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.repository.jdbc.JdbcProductRepository;
-import ru.ylab.tasks.task3.service.ProductService;
-import ru.ylab.tasks.task3.controller.util.SearchFilter;
+import ru.ylab.tasks.task3.service.product.ProductService;
+import ru.ylab.tasks.task3.util.SearchFilter;
 
 import java.math.BigDecimal;
 import java.util.List;

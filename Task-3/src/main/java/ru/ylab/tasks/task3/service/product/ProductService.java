@@ -1,9 +1,10 @@
-package ru.ylab.tasks.task3.service;
+package ru.ylab.tasks.task3.service.product;
 
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.repository.ProductRepository;
-import ru.ylab.tasks.task3.controller.util.FilterKey;
-import ru.ylab.tasks.task3.controller.util.SearchFilter;
+import ru.ylab.tasks.task3.util.FilterKey;
+import ru.ylab.tasks.task3.util.SearchFilter;
+import ru.ylab.tasks.task3.service.performance.LruCache;
 
 import java.math.BigDecimal;
 import java.util.*;

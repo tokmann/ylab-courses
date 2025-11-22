@@ -2,9 +2,10 @@ package ru.ylab.tasks.task3.controller;
 
 import ru.ylab.tasks.task3.constant.AuditMessages;
 import ru.ylab.tasks.task3.constant.Role;
+import ru.ylab.tasks.task3.exception.AccessDeniedException;
 import ru.ylab.tasks.task3.model.User;
 import ru.ylab.tasks.task3.security.AuthService;
-import ru.ylab.tasks.task3.service.AuditService;
+import ru.ylab.tasks.task3.service.audit.AuditService;
 
 import static ru.ylab.tasks.task3.constant.AuditMessages.*;
 
@@ -84,6 +85,10 @@ public class UserController {
      */
     public User currentUser() {
         return auth.getCurrentUser();
+    }
+
+    public void checkAdmin(User user) throws AccessDeniedException {
+        auth.checkAdmin(user);
     }
 
 }

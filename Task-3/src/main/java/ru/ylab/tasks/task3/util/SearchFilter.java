@@ -1,6 +1,6 @@
-package ru.ylab.tasks.task3.controller.util;
+package ru.ylab.tasks.task3.util;
 
-import ru.ylab.tasks.task3.service.ProductService;
+import ru.ylab.tasks.task3.service.product.ProductService;
 
 import java.math.BigDecimal;
 

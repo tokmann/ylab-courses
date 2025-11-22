@@ -1,0 +1,18 @@
+package ru.ylab.tasks.task3.dto.response.user;
+
+public class LogoutResponse {
+
+    private String message;
+
+    public LogoutResponse(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}
