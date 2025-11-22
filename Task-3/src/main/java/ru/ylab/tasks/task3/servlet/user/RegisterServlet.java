@@ -65,7 +65,7 @@ public class RegisterServlet extends HttpServlet {
         if (!success) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(VALIDATION_FAILED, List.of("Registration failed")));
+                    new ErrorResponse(VALIDATION_FAILED, List.of("Регистрация не завершилась")));
             return;
         }
 

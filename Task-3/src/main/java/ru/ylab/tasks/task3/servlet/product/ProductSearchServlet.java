@@ -16,9 +16,11 @@ import ru.ylab.tasks.task3.dto.response.common.ErrorResponse;
 import ru.ylab.tasks.task3.dto.response.product.ProductResponse;
 import ru.ylab.tasks.task3.dto.response.product.ProductSearchResponse;
 import ru.ylab.tasks.task3.model.Product;
+import ru.ylab.tasks.task3.util.ParseUtils;
 import ru.ylab.tasks.task3.util.SearchFilter;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +49,7 @@ public class ProductSearchServlet extends HttpServlet {
         if (!userController.isAuthenticated()) {
             resp.setStatus(401);
             objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(USER_UNAUTHORIZED, List.of("User must be logged in")));
+                    new ErrorResponse(USER_UNAUTHORIZED, List.of("Пользователь должен войти")));
             return;
         }
 
@@ -61,12 +63,16 @@ public class ProductSearchServlet extends HttpServlet {
             return;
         }
 
-        if (filterDto.getMinPrice() != null && filterDto.getMaxPrice() != null &&
-                filterDto.getMinPrice().compareTo(filterDto.getMaxPrice()) > 0) {
+        BigDecimal min = ParseUtils.parseBigDecimal(filterDto.getMinPrice());
+        BigDecimal max = ParseUtils.parseBigDecimal(filterDto.getMaxPrice());
+
+        if (min != null && max != null && min.compareTo(max) > 0) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getWriter(),
+            objectMapper.writeValue(
+                    resp.getWriter(),
                     new ErrorResponse(ResponseMessages.VALIDATION_FAILED,
-                            List.of(PRODUCT_INVALID_MIN_MAX_PRICE)));
+                            List.of(PRODUCT_INVALID_MIN_MAX_PRICE))
+            );
             return;
         }
 
@@ -74,8 +80,8 @@ public class ProductSearchServlet extends HttpServlet {
                 filterDto.getKeyword(),
                 filterDto.getCategory(),
                 filterDto.getBrand(),
-                filterDto.getMinPrice(),
-                filterDto.getMaxPrice()
+                min,
+                max
         );
 
         List<Product> products;

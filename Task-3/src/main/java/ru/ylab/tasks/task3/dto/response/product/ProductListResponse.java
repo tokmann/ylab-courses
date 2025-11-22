@@ -9,5 +9,13 @@ public class ProductListResponse {
     public ProductListResponse(List<ProductResponse> products) {
         this.products = products;
     }
+
+    public List<ProductResponse> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductResponse> products) {
+        this.products = products;
+    }
 }
 

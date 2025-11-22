@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet  {
         if (!success) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(VALIDATION_FAILED, List.of("Invalid login or password")));
+                    new ErrorResponse(VALIDATION_FAILED, List.of("Неверный логин или пароль")));
             return;
         }
 

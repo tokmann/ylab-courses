@@ -12,7 +12,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <liquibase.version>4.31.0</liquibase.version>
         <postgresql.version>42.7.8</postgresql.version>
         <testcontainers.pgsql.version>1.21.3</testcontainers.pgsql.version>
@@ -22,6 +22,7 @@
         <jackson-databind.version>2.20.0</jackson-databind.version>
         <jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
         <aspectj-version>1.9.7</aspectj-version>
+        <aspectj-maven-plugin>1.15.0</aspectj-maven-plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
@@ -30,10 +31,27 @@
         <finalName>homeWorkThree</finalName>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
-                <version>1.14.0</version>
+                <version>${aspectj-maven-plugin}</version>
                 <configuration>
+                    <proc>none</proc>
                     <complianceLevel>16</complianceLevel>
                     <source>16</source>
                     <target>16</target>
@@ -59,6 +77,13 @@
             <artifactId>aspectjrt</artifactId>
             <version>${aspectj-version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

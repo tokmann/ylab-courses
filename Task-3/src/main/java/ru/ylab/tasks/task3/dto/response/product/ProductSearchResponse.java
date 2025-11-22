@@ -10,5 +10,12 @@ public class ProductSearchResponse {
         this.results = results;
     }
 
+    public List<ProductResponse> getResults() {
+        return results;
+    }
+
+    public void setResults(List<ProductResponse> results) {
+        this.results = results;
+    }
 }
 

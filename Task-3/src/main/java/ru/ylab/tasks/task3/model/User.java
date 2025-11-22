@@ -9,9 +9,11 @@ import ru.ylab.tasks.task3.constant.Role;
 public class User {
 
     private Long id;
-    private final String login;
+    private String login;
     private String password;
     private Role role;
+
+    public User() {}
 
     public User(Long id, String login, String password, Role role) {
         this.id = id;
@@ -38,6 +40,8 @@ public class User {
     public String getLogin() {
         return login;
     }
+
+    public void setLogin(String login) {this.login = login; }
 
     public String getPassword() {
         return password;

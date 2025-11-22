@@ -36,7 +36,7 @@ public class LogoutServlet extends HttpServlet {
         if (!userController.isAuthenticated()) {
             resp.setStatus(401);
             objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(USER_UNAUTHORIZED, List.of("User must be logged in")));
+                    new ErrorResponse(USER_UNAUTHORIZED, List.of("Пользователь должен войти")));
             return;
         }
 

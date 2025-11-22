@@ -6,7 +6,9 @@ import ru.ylab.tasks.task3.dto.request.product.ProductCreateRequest;
 import ru.ylab.tasks.task3.dto.response.product.ProductResponse;
 import ru.ylab.tasks.task3.model.Product;
 
-@Mapper
+import java.math.BigDecimal;
+
+@Mapper(imports = {BigDecimal.class})
 public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)

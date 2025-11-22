@@ -95,7 +95,7 @@ public class ProductService implements IProductService {
 
     /** Фильтрует список по категории. */
     private List<Product> filterByCategory(List<Product> candidates, SearchFilter f) {
-        if (f.category() == null) return candidates;
+        if (f.category() == null || f.category().isBlank()) return candidates;
         return candidates.stream()
                 .filter(p -> p.getCategory().equalsIgnoreCase(f.category()))
                 .toList();
@@ -103,7 +103,7 @@ public class ProductService implements IProductService {
 
     /** Фильтрует список по бренду. */
     private List<Product> filterByBrand(List<Product> candidates, SearchFilter f) {
-        if (f.brand() == null) return candidates;
+        if (f.brand() == null || f.brand().isBlank()) return candidates;
         return candidates.stream()
                 .filter(p -> p.getBrand().equalsIgnoreCase(f.brand()))
                 .toList();

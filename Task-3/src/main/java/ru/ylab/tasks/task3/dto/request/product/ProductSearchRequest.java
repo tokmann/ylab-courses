@@ -7,12 +7,12 @@ public class ProductSearchRequest {
     private String keyword;
     private String category;
     private String brand;
-    private BigDecimal minPrice;
-    private BigDecimal maxPrice;
+    private String minPrice;
+    private String maxPrice;
 
     public ProductSearchRequest() {}
 
-    public ProductSearchRequest(String keyword, String category, String brand, BigDecimal minPrice, BigDecimal maxPrice) {
+    public ProductSearchRequest(String keyword, String category, String brand, String minPrice, String maxPrice) {
         this.keyword = keyword;
         this.category = category;
         this.brand = brand;
@@ -32,11 +32,11 @@ public class ProductSearchRequest {
         return brand;
     }
 
-    public BigDecimal getMinPrice() {
+    public String getMinPrice() {
         return minPrice;
     }
 
-    public BigDecimal getMaxPrice() {
+    public String getMaxPrice() {
         return maxPrice;
     }
 
