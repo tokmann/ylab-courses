@@ -3,6 +3,10 @@ package ru.ylab.tasks.task3.repository.jdbc;
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.repository.ProductRepository;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,10 +22,15 @@ import static ru.ylab.tasks.task3.constant.SqlConstants.*;
  */
 public class JdbcProductRepository implements ProductRepository {
 
-    private final Connection connection;
+    private final DataSource dataSource;
 
-    public JdbcProductRepository(Connection connection) {
-        this.connection = connection;
+    public JdbcProductRepository() {
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/marketplaceDS");
+        } catch (NamingException e) {
+            throw new RuntimeException("Ошибка получения DataSource из JNDI", e);
+        }
     }
 
     /**
@@ -31,21 +40,23 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public void save(Product product) {
-        try {
+        try (Connection conn = dataSource.getConnection()) {
             if (product.getId() == null) {
-                try (PreparedStatement ps = connection.prepareStatement(INSERT_PRODUCT)) {
+                try (PreparedStatement ps = conn.prepareStatement(INSERT_PRODUCT, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, product.getName());
                     ps.setString(2, product.getCategory());
                     ps.setString(3, product.getBrand());
                     ps.setBigDecimal(4, product.getPrice());
                     ps.setString(5, product.getDescription());
-                    ResultSet rs = ps.executeQuery();
-                    if (rs.next()) {
-                        product.setId(rs.getLong("id"));
+                    ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            product.setId(rs.getLong(1));
+                        }
                     }
                 }
             } else {
-                try (PreparedStatement ps = connection.prepareStatement(UPDATE_PRODUCT)) {
+                try (PreparedStatement ps = conn.prepareStatement(UPDATE_PRODUCT)) {
                     ps.setString(1, product.getName());
                     ps.setString(2, product.getCategory());
                     ps.setString(3, product.getBrand());
@@ -67,13 +78,14 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findAll() {
         List<Product> list = new ArrayList<>();
-        try (Statement st = connection.createStatement();
+        try (Connection conn = dataSource.getConnection();
+             Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_PRODUCTS)) {
             while (rs.next()) {
                 list.add(mapProduct(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка получения всех продуктов: " + e.getMessage(), e);
         }
         return list;
     }
@@ -85,13 +97,15 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public Optional<Product> findById(Long id) {
-        try (PreparedStatement ps = connection.prepareStatement(SELECT_PRODUCT_BY_ID)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCT_BY_ID)) {
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return Optional.of(mapProduct(rs));
-            return Optional.empty();
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapProduct(rs));
+                return Optional.empty();
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка поиска продукта по id: " + e.getMessage(), e);
         }
     }
 
@@ -101,11 +115,12 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public void deleteById(Long id) {
-        try (PreparedStatement ps = connection.prepareStatement(DELETE_PRODUCT_BY_ID)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_PRODUCT_BY_ID)) {
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка удаления продукта: " + e.getMessage(), e);
         }
     }
 
@@ -117,12 +132,14 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findByCategory(String category) {
         List<Product> list = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(SELECT_PRODUCTS_BY_CATEGORY)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCTS_BY_CATEGORY)) {
             ps.setString(1, category);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapProduct(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapProduct(rs));
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка поиска продуктов по категории: " + e.getMessage(), e);
         }
         return list;
     }
@@ -135,12 +152,14 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findByBrand(String brand) {
         List<Product> list = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(SELECT_PRODUCTS_BY_BRAND)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCTS_BY_BRAND)) {
             ps.setString(1, brand);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapProduct(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapProduct(rs));
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка поиска продуктов по бренду: " + e.getMessage(), e);
         }
         return list;
     }
@@ -154,13 +173,15 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findByPriceRange(BigDecimal min, BigDecimal max) {
         List<Product> list = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(SELECT_PRODUCTS_BY_PRICE_RANGE)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCTS_BY_PRICE_RANGE)) {
             ps.setBigDecimal(1, min);
             ps.setBigDecimal(2, max);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapProduct(rs));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapProduct(rs));
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка поиска продуктов по диапазону цен: " + e.getMessage(), e);
         }
         return list;
     }
@@ -171,12 +192,13 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public Optional<BigDecimal> getMinPrice() {
-        try (Statement st = connection.createStatement();
+        try (Connection conn = dataSource.getConnection();
+             Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_MIN_PRICE)) {
             if (rs.next()) return Optional.ofNullable(rs.getBigDecimal("min_price"));
             return Optional.empty();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка получения минимальной цены: " + e.getMessage(), e);
         }
     }
 
@@ -186,12 +208,13 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public Optional<BigDecimal> getMaxPrice() {
-        try (Statement st = connection.createStatement();
+        try (Connection conn = dataSource.getConnection();
+             Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_MAX_PRICE)) {
             if (rs.next()) return Optional.ofNullable(rs.getBigDecimal("max_price"));
             return Optional.empty();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка получения максимальной цены: " + e.getMessage(), e);
         }
     }
 

@@ -4,6 +4,10 @@ import ru.ylab.tasks.task3.constant.Role;
 import ru.ylab.tasks.task3.model.User;
 import ru.ylab.tasks.task3.repository.UserRepository;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +21,15 @@ import static ru.ylab.tasks.task3.constant.SqlConstants.*;
  */
 public class JdbcUserRepository implements UserRepository {
 
-    private final Connection connection;
+    private final DataSource dataSource;
 
-    public JdbcUserRepository(Connection connection) {
-        this.connection = connection;
+    public JdbcUserRepository() {
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/marketplaceDS");
+        } catch (NamingException e) {
+            throw new RuntimeException("Ошибка получения DataSource из JNDI", e);
+        }
     }
 
     /**
@@ -30,20 +39,21 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public void save(User user) {
-        try {
+        try (Connection conn = dataSource.getConnection()) {
             if (user.getId() == null) {
-                try (PreparedStatement ps = connection.prepareStatement(INSERT_USER)) {
+                try (PreparedStatement ps = conn.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, user.getLogin());
                     ps.setString(2, user.getPassword());
                     ps.setString(3, user.getRole().name());
-                    try (ResultSet rs = ps.executeQuery()) {
+                    ps.executeUpdate();
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
                         if (rs.next()) {
-                            user.setId(rs.getLong("id"));
+                            user.setId(rs.getLong(1));
                         }
                     }
                 }
             } else {
-                try (PreparedStatement ps = connection.prepareStatement(UPDATE_USER)) {
+                try (PreparedStatement ps = conn.prepareStatement(UPDATE_USER)) {
                     ps.setString(1, user.getLogin());
                     ps.setString(2, user.getPassword());
                     ps.setString(3, user.getRole().name());
@@ -63,7 +73,8 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public Optional<User> findById(Long id) {
-        try (PreparedStatement ps = connection.prepareStatement(SELECT_USER_BY_ID)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_USER_BY_ID)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return Optional.of(mapRow(rs));
@@ -81,7 +92,8 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public Optional<User> findByLogin(String login) {
-        try (PreparedStatement ps = connection.prepareStatement(SELECT_USER_BY_LOGIN)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_USER_BY_LOGIN)) {
             ps.setString(1, login);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return Optional.of(mapRow(rs));
@@ -98,7 +110,8 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public List<User> findAll() {
-        try (Statement st = connection.createStatement();
+        try (Connection conn = dataSource.getConnection();
+             Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_USERS)) {
             List<User> users = new ArrayList<>();
             while (rs.next()) {
@@ -117,7 +130,8 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public boolean existsByLogin(String login) {
-        try (PreparedStatement ps = connection.prepareStatement(EXISTS_USER_BY_LOGIN)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(EXISTS_USER_BY_LOGIN)) {
             ps.setString(1, login);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
@@ -134,7 +148,8 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public boolean deleteById(Long id) {
-        try (PreparedStatement ps = connection.prepareStatement(DELETE_USER_BY_ID)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_USER_BY_ID)) {
             ps.setLong(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
