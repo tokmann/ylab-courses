@@ -2,9 +2,11 @@ package ru.ylab.tasks.task3.dto.request.user;
 
 public class RegisterRequest {
 
-    private final String login;
-    private final String password;
-    private final String role;
+    private String login;
+    private String password;
+    private String role;
+
+    public RegisterRequest() {}
 
     public RegisterRequest(String login, String password, String role) {
         this.login = login;

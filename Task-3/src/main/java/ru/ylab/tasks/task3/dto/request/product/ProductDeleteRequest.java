@@ -4,6 +4,8 @@ public class ProductDeleteRequest {
 
     private Long id;
 
+    public ProductDeleteRequest() {}
+
     public Long getId() {
         return id;
     }

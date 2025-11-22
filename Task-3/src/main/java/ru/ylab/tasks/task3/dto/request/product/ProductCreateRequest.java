@@ -3,11 +3,13 @@ package ru.ylab.tasks.task3.dto.request.product;
 
 public class ProductCreateRequest {
 
-    private final String name;
-    private final String category;
-    private final String brand;
-    private final String price;
-    private final String description;
+    private String name;
+    private String category;
+    private String brand;
+    private String price;
+    private String description;
+
+    public ProductCreateRequest() {}
 
     public ProductCreateRequest(String name, String category, String brand,
                                 String price, String description) {
@@ -17,6 +19,7 @@ public class ProductCreateRequest {
         this.price = price;
         this.description = description;
     }
+
 
     public String getName() {
         return name;

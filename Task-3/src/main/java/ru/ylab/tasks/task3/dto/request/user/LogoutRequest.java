@@ -4,4 +4,5 @@ public class LogoutRequest {
 
     private String confirm;
 
+    public LogoutRequest() {}
 }

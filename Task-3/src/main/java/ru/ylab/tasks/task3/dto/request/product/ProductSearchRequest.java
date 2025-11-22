@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 
 public class ProductSearchRequest {
 
-    private final String keyword;
-    private final String category;
-    private final String brand;
+    private String keyword;
+    private String category;
+    private String brand;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
+
+    public ProductSearchRequest() {}
 
     public ProductSearchRequest(String keyword, String category, String brand, BigDecimal minPrice, BigDecimal maxPrice) {
         this.keyword = keyword;

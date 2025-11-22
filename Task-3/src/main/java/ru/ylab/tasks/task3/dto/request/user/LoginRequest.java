@@ -2,8 +2,10 @@ package ru.ylab.tasks.task3.dto.request.user;
 
 public class LoginRequest {
 
-    private final String login;
-    private final String password;
+    private String login;
+    private String password;
+
+    public LoginRequest() {}
 
     public LoginRequest(String login, String password) {
         this.login = login;
@@ -17,4 +19,5 @@ public class LoginRequest {
     public String getPassword() {
         return password;
     }
+
 }

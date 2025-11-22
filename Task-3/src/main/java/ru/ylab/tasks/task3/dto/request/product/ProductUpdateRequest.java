@@ -3,12 +3,14 @@ package ru.ylab.tasks.task3.dto.request.product;
 
 public class ProductUpdateRequest {
 
-    private final Long id;
-    private final String name;
-    private final String category;
-    private final String brand;
-    private final String price;
-    private final String description;
+    private Long id;
+    private String name;
+    private String category;
+    private String brand;
+    private String price;
+    private String description;
+
+    public ProductUpdateRequest() {}
 
     public ProductUpdateRequest(Long id, String name, String category,
                                 String brand, String price, String description) {
