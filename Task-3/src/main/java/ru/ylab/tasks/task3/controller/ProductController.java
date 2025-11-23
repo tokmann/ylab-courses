@@ -1,7 +1,7 @@
 package ru.ylab.tasks.task3.controller;
 
+import ru.ylab.tasks.task3.controller.interfaces.IProductController;
 import ru.ylab.tasks.task3.model.Product;
-import ru.ylab.tasks.task3.security.AuthService;
 import ru.ylab.tasks.task3.service.audit.AuditService;
 import ru.ylab.tasks.task3.service.product.ProductService;
 import ru.ylab.tasks.task3.util.SearchFilter;
@@ -9,14 +9,11 @@ import ru.ylab.tasks.task3.util.SearchFilter;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static ru.ylab.tasks.task3.constant.AuditMessages.*;
-
-
 /**
  * Контроллер управления товарами.
  * Делегирует операции {@link ProductService} и фиксирует события через {@link AuditService}.
  */
-public class ProductController {
+public class ProductController implements IProductController {
 
     private final ProductService productService;
 
@@ -29,6 +26,7 @@ public class ProductController {
      * Делегирует создание товара {@link ProductService} и логирует событие через {@link AuditService}.
      * @param product товар для добавления
      */
+    @Override
     public void addProduct(Product product) {
         productService.create(product);
     }
@@ -42,6 +40,7 @@ public class ProductController {
      * @param price    новая цена
      * @param desc     новое описание
      */
+    @Override
     public void updateProduct(Long id, String name, String category, String brand, BigDecimal price, String desc) {
         productService.update(id, name, category, brand, price, desc);
     }
@@ -50,6 +49,7 @@ public class ProductController {
      * Удаляет товар по идентификатору.
      * @param id UUID товара
      */
+    @Override
     public void deleteProduct(Long id) {
         productService.delete(id);
     }
@@ -58,6 +58,7 @@ public class ProductController {
      * Возвращает все товары.
      * @return список всех товаров
      */
+    @Override
     public List<Product> getAllProducts() {
         return productService.getAll();
     }
@@ -68,6 +69,7 @@ public class ProductController {
      * @param filter фильтр поиска
      * @return список товаров, удовлетворяющих фильтру
      */
+    @Override
     public List<Product> searchProducts(SearchFilter filter) {
         return productService.search(filter);
     }

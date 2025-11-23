@@ -14,10 +14,10 @@ public final class UserValidator {
         List<String> errors = new ArrayList<>();
 
         if (dto.getLogin() == null || dto.getLogin().isBlank()) {
-            errors.add("login must not be empty");
+            errors.add("Login must not be empty");
         }
         if (dto.getPassword() == null || dto.getPassword().isBlank()) {
-            errors.add("password must not be empty");
+            errors.add("Password must not be empty");
         }
         return errors;
     }
@@ -26,10 +26,10 @@ public final class UserValidator {
         List<String> errors = new ArrayList<>();
 
         if (dto.getLogin() == null || dto.getLogin().isBlank()) {
-            errors.add("login must not be empty");
+            errors.add("Login must not be empty");
         }
         if (dto.getPassword() == null || dto.getPassword().isBlank()) {
-            errors.add("password must not be empty");
+            errors.add("Password must not be empty");
         }
         return errors;
     }

@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import ru.ylab.tasks.task3.constant.ResponseMessages;
 import ru.ylab.tasks.task3.controller.ProductController;
 import ru.ylab.tasks.task3.controller.UserController;
+import ru.ylab.tasks.task3.controller.interfaces.IProductController;
+import ru.ylab.tasks.task3.controller.interfaces.IUserController;
 import ru.ylab.tasks.task3.dto.request.product.ProductDeleteRequest;
 import ru.ylab.tasks.task3.dto.response.common.ErrorResponse;
 import ru.ylab.tasks.task3.dto.response.product.ProductDeletedResponse;
@@ -21,18 +23,18 @@ import static ru.ylab.tasks.task3.constant.ResponseMessages.*;
 @WebServlet("/marketplace/products/delete")
 public class ProductDeleteServlet extends HttpServlet {
 
-    private ProductController productController;
-    private UserController userController;
+    private IProductController productController;
+    private IUserController userController;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void init() {
-        this.productController = (ProductController) getServletContext().getAttribute("productController");
-        this.userController = (UserController) getServletContext().getAttribute("userController");
+        this.productController = (IProductController) getServletContext().getAttribute("productController");
+        this.userController = (IUserController) getServletContext().getAttribute("userController");
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

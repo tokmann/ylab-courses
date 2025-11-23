@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.mapstruct.factory.Mappers;
 import ru.ylab.tasks.task3.constant.ResponseMessages;
 import ru.ylab.tasks.task3.controller.UserController;
+import ru.ylab.tasks.task3.controller.interfaces.IUserController;
 import ru.ylab.tasks.task3.dto.mapper.UserMapper;
 import ru.ylab.tasks.task3.dto.request.user.RegisterRequest;
 import ru.ylab.tasks.task3.dto.response.common.ErrorResponse;
@@ -25,18 +26,18 @@ import static ru.ylab.tasks.task3.constant.ResponseMessages.VALIDATION_FAILED;
 @WebServlet("/marketplace/auth/register")
 public class RegisterServlet extends HttpServlet {
 
-    private UserController userController;
+    private IUserController userController;
     private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void init() {
         this.userController =
-                (UserController) getServletContext().getAttribute("userController");
+                (IUserController) getServletContext().getAttribute("userController");
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
         resp.setContentType("application/json");
@@ -65,7 +66,7 @@ public class RegisterServlet extends HttpServlet {
         if (!success) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(VALIDATION_FAILED, List.of("Регистрация не завершилась")));
+                    new ErrorResponse(VALIDATION_FAILED, List.of("Registration was not completed")));
             return;
         }
 

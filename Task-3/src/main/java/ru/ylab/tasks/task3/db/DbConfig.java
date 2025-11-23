@@ -20,7 +20,7 @@ public class DbConfig {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("application.properties")) {
             props.load(is);
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось загрузить конфиг", e);
+            throw new RuntimeException("Error while loading config", e);
         }
     }
 

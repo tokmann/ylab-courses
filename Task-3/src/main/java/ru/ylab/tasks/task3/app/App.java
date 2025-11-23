@@ -24,11 +24,11 @@ public class App implements ServletContextListener {
         ServletContext ctx = sce.getServletContext();
 
         try {
-            // Прогоняем миграции Liquibase
+            // Миграции Liquibase
             LiquibaseRunner liquibaseRunner = new LiquibaseRunner(new DbConfig());
             liquibaseRunner.updateDatabase();
 
-            // Создаём репозитории без connection (они сами берут DataSource)
+            // Репозитории
             ProductRepository productRepository = new JdbcProductRepository();
             UserRepository userRepository = new JdbcUserRepository();
 
@@ -37,6 +37,7 @@ public class App implements ServletContextListener {
             AuthService authService = new AuthService(userRepository);
             AuditService auditService = new AuditService();
 
+            // Зависимости аспекта для аудита
             AuditAspect.setAuditService(auditService);
             AuditAspect.setAuthService(authService);
 
@@ -44,7 +45,7 @@ public class App implements ServletContextListener {
             ProductController productController = new ProductController(productService);
             UserController userController = new UserController(authService);
 
-            // Сохраняем контроллеры в контекст
+            // Сохранение контроллеров в контекст
             ctx.setAttribute("productController", productController);
             ctx.setAttribute("userController", userController);
 

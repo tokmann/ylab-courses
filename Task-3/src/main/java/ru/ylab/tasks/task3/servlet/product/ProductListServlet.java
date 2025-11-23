@@ -9,6 +9,8 @@ import org.mapstruct.factory.Mappers;
 import ru.ylab.tasks.task3.constant.ResponseMessages;
 import ru.ylab.tasks.task3.controller.ProductController;
 import ru.ylab.tasks.task3.controller.UserController;
+import ru.ylab.tasks.task3.controller.interfaces.IProductController;
+import ru.ylab.tasks.task3.controller.interfaces.IUserController;
 import ru.ylab.tasks.task3.dto.mapper.ProductMapper;
 import ru.ylab.tasks.task3.dto.response.common.ErrorResponse;
 import ru.ylab.tasks.task3.dto.response.product.ProductListResponse;
@@ -24,20 +26,20 @@ import static ru.ylab.tasks.task3.constant.ResponseMessages.USER_UNAUTHORIZED;
 @WebServlet("/marketplace/products/list")
 public class ProductListServlet extends HttpServlet {
 
-    private ProductController productController;
-    private UserController userController;
+    private IProductController productController;
+    private IUserController userController;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
 
     @Override
     public void init() {
         this.productController =
-                (ProductController) getServletContext().getAttribute("productController");
-        this.userController = (UserController) getServletContext().getAttribute("userController");
+                (IProductController) getServletContext().getAttribute("productController");
+        this.userController = (IUserController) getServletContext().getAttribute("userController");
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

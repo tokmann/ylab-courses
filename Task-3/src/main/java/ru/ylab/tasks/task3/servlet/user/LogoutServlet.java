@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.ylab.tasks.task3.controller.UserController;
+import ru.ylab.tasks.task3.controller.interfaces.IUserController;
 import ru.ylab.tasks.task3.dto.response.common.ErrorResponse;
 import ru.ylab.tasks.task3.dto.response.user.LogoutResponse;
 
@@ -18,16 +19,16 @@ import static ru.ylab.tasks.task3.constant.ResponseMessages.*;
 @WebServlet("/marketplace/auth/logout")
 public class LogoutServlet extends HttpServlet {
 
-    private UserController userController;
+    private IUserController userController;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void init() {
-        this.userController = (UserController) getServletContext().getAttribute("userController");
+        this.userController = (IUserController) getServletContext().getAttribute("userController");
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
         resp.setContentType("application/json");
@@ -36,7 +37,7 @@ public class LogoutServlet extends HttpServlet {
         if (!userController.isAuthenticated()) {
             resp.setStatus(401);
             objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(USER_UNAUTHORIZED, List.of("Пользователь должен войти")));
+                    new ErrorResponse(USER_UNAUTHORIZED, List.of("User must be logged in")));
             return;
         }
 

@@ -6,6 +6,8 @@ public class ProductListResponse {
 
     private List<ProductResponse> products;
 
+    public ProductListResponse() {}
+
     public ProductListResponse(List<ProductResponse> products) {
         this.products = products;
     }

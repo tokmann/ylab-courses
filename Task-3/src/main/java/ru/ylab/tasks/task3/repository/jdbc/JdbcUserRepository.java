@@ -162,4 +162,5 @@ public class JdbcUserRepository implements UserRepository {
         Role role = roleStr != null ? Role.valueOf(roleStr) : null;
         return new User(id, login, password, role);
     }
+
 }

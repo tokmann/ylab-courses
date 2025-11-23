@@ -40,4 +40,23 @@ public class ProductSearchRequest {
         return maxPrice;
     }
 
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setMinPrice(String minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public void setMaxPrice(String maxPrice) {
+        this.maxPrice = maxPrice;
+    }
 }

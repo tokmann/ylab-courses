@@ -12,7 +12,7 @@ public final class FileConstants {
     public static final String PRODUCT_FILE = "product.txt";
 
     /** Имя файла с пользователями */
-    public static final String USER_FILE = "uesrs.txt";
+    public static final String USER_FILE = "users.txt";
 
     /** Разделитель полей в файле */
     public static final String DELIMITER = "|";
