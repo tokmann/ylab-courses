@@ -7,6 +7,7 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import ru.ylab.tasks.task3.db.ConnectionFactory;
 import ru.ylab.tasks.task3.db.DbConfig;
 
 import java.sql.Connection;
@@ -29,11 +30,7 @@ public class LiquibaseRunner {
      * Применяет все changesets из указанного changelog файла.
      */
     public void updateDatabase() {
-        try (Connection connection = DriverManager.getConnection(
-                config.getUrl(),
-                config.getUsername(),
-                config.getPassword()
-        )) {
+        try (Connection connection = ConnectionFactory.getConnection()) {
 
             Database database = DatabaseFactory.getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));

@@ -1,6 +1,7 @@
 package ru.ylab.tasks.task3.repository.jdbc;
 
 import ru.ylab.tasks.task3.constant.Role;
+import ru.ylab.tasks.task3.db.ConnectionFactory;
 import ru.ylab.tasks.task3.model.User;
 import ru.ylab.tasks.task3.repository.UserRepository;
 
@@ -21,16 +22,7 @@ import static ru.ylab.tasks.task3.constant.SqlConstants.*;
  */
 public class JdbcUserRepository implements UserRepository {
 
-    private final DataSource dataSource;
-
-    public JdbcUserRepository() {
-        try {
-            Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/marketplaceDS");
-        } catch (NamingException e) {
-            throw new RuntimeException("Ошибка получения DataSource из JNDI", e);
-        }
-    }
+    public JdbcUserRepository() {}
 
     /**
      * Сохраняет пользователя в базе данных.
@@ -39,7 +31,7 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public void save(User user) {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = ConnectionFactory.getConnection()) {
             if (user.getId() == null) {
                 try (PreparedStatement ps = conn.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, user.getLogin());
@@ -73,7 +65,7 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public Optional<User> findById(Long id) {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_USER_BY_ID)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -92,7 +84,7 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public Optional<User> findByLogin(String login) {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_USER_BY_LOGIN)) {
             ps.setString(1, login);
             try (ResultSet rs = ps.executeQuery()) {
@@ -110,7 +102,7 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public List<User> findAll() {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_USERS)) {
             List<User> users = new ArrayList<>();
@@ -130,7 +122,7 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public boolean existsByLogin(String login) {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(EXISTS_USER_BY_LOGIN)) {
             ps.setString(1, login);
             try (ResultSet rs = ps.executeQuery()) {
@@ -148,7 +140,7 @@ public class JdbcUserRepository implements UserRepository {
      */
     @Override
     public boolean deleteById(Long id) {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(DELETE_USER_BY_ID)) {
             ps.setLong(1, id);
             return ps.executeUpdate() > 0;

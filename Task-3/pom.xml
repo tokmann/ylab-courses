@@ -23,6 +23,7 @@
         <jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
         <aspectj-version>1.9.7</aspectj-version>
         <aspectj-maven-plugin>1.15.0</aspectj-maven-plugin>
+        <tomcat-jdcb.version>10.1.49</tomcat-jdcb.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
@@ -72,6 +73,13 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat-jdcb.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>

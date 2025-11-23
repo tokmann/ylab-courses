@@ -1,5 +1,6 @@
 package ru.ylab.tasks.task3.repository.jdbc;
 
+import ru.ylab.tasks.task3.db.ConnectionFactory;
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.repository.ProductRepository;
 
@@ -22,16 +23,7 @@ import static ru.ylab.tasks.task3.constant.SqlConstants.*;
  */
 public class JdbcProductRepository implements ProductRepository {
 
-    private final DataSource dataSource;
-
-    public JdbcProductRepository() {
-        try {
-            Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/marketplaceDS");
-        } catch (NamingException e) {
-            throw new RuntimeException("Ошибка получения DataSource из JNDI", e);
-        }
-    }
+    public JdbcProductRepository() {}
 
     /**
      * Сохраняет продукт в базе данных.
@@ -40,7 +32,7 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public void save(Product product) {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = ConnectionFactory.getConnection()) {
             if (product.getId() == null) {
                 try (PreparedStatement ps = conn.prepareStatement(INSERT_PRODUCT, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, product.getName());
@@ -78,7 +70,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findAll() {
         List<Product> list = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_ALL_PRODUCTS)) {
             while (rs.next()) {
@@ -97,7 +89,7 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public Optional<Product> findById(Long id) {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCT_BY_ID)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -115,7 +107,7 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public void deleteById(Long id) {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(DELETE_PRODUCT_BY_ID)) {
             ps.setLong(1, id);
             ps.executeUpdate();
@@ -132,7 +124,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findByCategory(String category) {
         List<Product> list = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCTS_BY_CATEGORY)) {
             ps.setString(1, category);
             try (ResultSet rs = ps.executeQuery()) {
@@ -152,7 +144,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findByBrand(String brand) {
         List<Product> list = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCTS_BY_BRAND)) {
             ps.setString(1, brand);
             try (ResultSet rs = ps.executeQuery()) {
@@ -173,7 +165,7 @@ public class JdbcProductRepository implements ProductRepository {
     @Override
     public Collection<Product> findByPriceRange(BigDecimal min, BigDecimal max) {
         List<Product> list = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_PRODUCTS_BY_PRICE_RANGE)) {
             ps.setBigDecimal(1, min);
             ps.setBigDecimal(2, max);
@@ -192,7 +184,7 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public Optional<BigDecimal> getMinPrice() {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_MIN_PRICE)) {
             if (rs.next()) return Optional.ofNullable(rs.getBigDecimal("min_price"));
@@ -208,7 +200,7 @@ public class JdbcProductRepository implements ProductRepository {
      */
     @Override
     public Optional<BigDecimal> getMaxPrice() {
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = ConnectionFactory.getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(SELECT_MAX_PRICE)) {
             if (rs.next()) return Optional.ofNullable(rs.getBigDecimal("max_price"));

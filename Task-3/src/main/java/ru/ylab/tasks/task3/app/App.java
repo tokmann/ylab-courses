@@ -26,19 +26,10 @@ public class App implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext ctx = sce.getServletContext();
 
-        DbConfig dbConfig = new DbConfig();
         try {
-            // Явно загружаем драйвер (для совместимости, хотя с DataSource не обязательно)
-            Class.forName("org.postgresql.Driver");
-
-            // Для Liquibase используем временное соединение
-            try (Connection connection = DriverManager.getConnection(
-                    dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword())) {
-
-                // Прогоняем миграции Liquibase
-                LiquibaseRunner liquibaseRunner = new LiquibaseRunner(dbConfig);
-                liquibaseRunner.updateDatabase();
-            }
+            // Прогоняем миграции Liquibase
+            LiquibaseRunner liquibaseRunner = new LiquibaseRunner(new DbConfig());
+            liquibaseRunner.updateDatabase();
 
             // Создаём репозитории без connection (они сами берут DataSource)
             ProductRepository productRepository = new JdbcProductRepository();
@@ -48,6 +39,7 @@ public class App implements ServletContextListener {
             ProductService productService = new ProductService(productRepository);
             AuthService authService = new AuthService(userRepository);
             AuditService auditService = new AuditService();
+
             // Контроллеры
             ProductController productController = new ProductController(productService, authService, auditService);
             UserController userController = new UserController(authService, auditService);
@@ -58,12 +50,6 @@ public class App implements ServletContextListener {
 
             System.out.println("Приложение запущено успешно");
 
-        } catch (ClassNotFoundException e) {
-            System.err.println("Драйвер PostgreSQL не найден в classpath: " + e.getMessage());
-            e.printStackTrace();
-        } catch (SQLException e) {
-            System.err.println("Ошибка подключения к базе: " + e.getMessage());
-            e.printStackTrace();
         } catch (Exception e) {
             System.err.println("Ошибка приложения: " + e.getMessage());
             e.printStackTrace();
