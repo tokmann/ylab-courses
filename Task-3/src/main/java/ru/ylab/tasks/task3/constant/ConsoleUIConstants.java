@@ -10,12 +10,16 @@ public final class ConsoleUIConstants {
 
     private ConsoleUIConstants() {}
 
-    // Константы меню доступа
+    /**
+     * Константы меню доступа
+     */
     public static final String MENU_LOGIN = "1";
     public static final String MENU_REGISTER = "2";
     public static final String MENU_EXIT = "0";
 
-    // Константы основного меню
+    /**
+     * Константы основного меню
+     */
     public static final String MENU_ADD_PRODUCT = "1";
     public static final String MENU_UPDATE_PRODUCT = "2";
     public static final String MENU_DELETE_PRODUCT = "3";

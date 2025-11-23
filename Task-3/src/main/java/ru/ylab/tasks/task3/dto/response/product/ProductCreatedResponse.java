@@ -1,5 +1,9 @@
 package ru.ylab.tasks.task3.dto.response.product;
 
+/**
+ * DTO для ответа на успешное создание продукта.
+ * Содержит идентификатор созданного продукта и сообщение.
+ */
 public class ProductCreatedResponse {
 
     private Long productId;

@@ -2,6 +2,10 @@ package ru.ylab.tasks.task3.dto.response.product;
 
 import java.util.List;
 
+/**
+ * DTO для ответа со списком продуктов.
+ * Содержит коллекцию продуктов.
+ */
 public class ProductListResponse {
 
     private List<ProductResponse> products;

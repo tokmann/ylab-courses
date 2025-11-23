@@ -2,6 +2,10 @@ package ru.ylab.tasks.task3.dto.response.product;
 
 import java.util.List;
 
+/**
+ * DTO для ответа на запрос поиска продуктов.
+ * Содержит результаты поиска продуктов.
+ */
 public class ProductSearchResponse {
 
     private List<ProductResponse> results;

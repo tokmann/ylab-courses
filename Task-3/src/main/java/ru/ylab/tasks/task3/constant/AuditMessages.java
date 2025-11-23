@@ -8,6 +8,7 @@ import ru.ylab.tasks.task3.service.audit.AuditService;
  * добавления, изменения, удаления товаров и действий с пользователями.
  */
 public final class AuditMessages {
+
     private AuditMessages() {}
 
     /** Сообщения о действиях с товарами */

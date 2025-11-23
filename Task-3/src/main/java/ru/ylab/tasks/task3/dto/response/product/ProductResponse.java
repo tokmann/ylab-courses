@@ -2,6 +2,10 @@ package ru.ylab.tasks.task3.dto.response.product;
 
 import java.math.BigDecimal;
 
+/**
+ * DTO для ответа с информацией о продукте.
+ * Содержит полную информацию о продукте.
+ */
 public class ProductResponse {
 
     private Long id;

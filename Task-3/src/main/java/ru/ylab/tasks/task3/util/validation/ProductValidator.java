@@ -6,10 +6,21 @@ import ru.ylab.tasks.task3.dto.request.product.ProductUpdateRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Утилитарный класс для валидации данных продуктов.
+ * Предоставляет статические методы для проверки корректности данных
+ * при создании и обновлении продуктов.
+ */
 public final class ProductValidator {
 
     private ProductValidator() {}
 
+    /**
+     * Валидирует данные для создания нового продукта.
+     * Проверяет обязательные поля и корректность формата цены.
+     * @param dto DTO запроса на создание продукта
+     * @return список ошибок валидации. Если список пуст, данные считаются валидными
+     */
     public static List<String> validateCreate(ProductCreateRequest dto) {
         List<String> errors = new ArrayList<>();
 
@@ -35,6 +46,12 @@ public final class ProductValidator {
         return errors;
     }
 
+    /**
+     * Валидирует данные для обновления существующего продукта.
+     * Проверяет обязательные поля, корректность формата цены и наличие идентификатора продукта.
+     * @param dto DTO запроса на обновление продукта
+     * @return список ошибок валидации. Если список пуст, данные считаются валидными
+     */
     public static List<String> validateUpdate(ProductUpdateRequest dto) {
         List<String> errors = new ArrayList<>();
 

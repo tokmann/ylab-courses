@@ -1,7 +1,9 @@
 package ru.ylab.tasks.task3.dto.request.product;
 
-import java.math.BigDecimal;
-
+/**
+ * DTO для запроса на поиск продуктов.
+ * Содержит критерии фильтрации для поиска продуктов.
+ */
 public class ProductSearchRequest {
 
     private String keyword;

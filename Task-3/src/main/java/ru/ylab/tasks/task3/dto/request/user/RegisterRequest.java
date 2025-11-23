@@ -1,5 +1,9 @@
 package ru.ylab.tasks.task3.dto.request.user;
 
+/**
+ * DTO для запроса на регистрацию пользователя.
+ * Содержит данные для создания нового пользователя.
+ */
 public class RegisterRequest {
 
     private String login;

@@ -1,6 +1,9 @@
 package ru.ylab.tasks.task3.dto.request.product;
 
-
+/**
+ * DTO для запроса на обновление продукта.
+ * Содержит обновленные данные продукта.
+ */
 public class ProductUpdateRequest {
 
     private Long id;

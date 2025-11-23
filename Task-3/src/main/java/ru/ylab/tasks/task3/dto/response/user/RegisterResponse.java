@@ -1,5 +1,9 @@
 package ru.ylab.tasks.task3.dto.response.user;
 
+/**
+ * DTO для ответа на успешную регистрацию пользователя.
+ * Содержит информацию о зарегистрированном пользователе.
+ */
 public class RegisterResponse {
 
     private String login;

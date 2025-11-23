@@ -1,15 +1,12 @@
 package ru.ylab.tasks.task3.servlet.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.mapstruct.factory.Mappers;
 import ru.ylab.tasks.task3.constant.ResponseMessages;
-import ru.ylab.tasks.task3.controller.ProductController;
-import ru.ylab.tasks.task3.controller.UserController;
 import ru.ylab.tasks.task3.controller.interfaces.IProductController;
 import ru.ylab.tasks.task3.controller.interfaces.IUserController;
 import ru.ylab.tasks.task3.dto.mapper.ProductMapper;
@@ -28,6 +25,11 @@ import java.util.stream.Collectors;
 
 import static ru.ylab.tasks.task3.constant.ResponseMessages.*;
 
+/**
+ * Сервлет для поиска продуктов в маркетплейсе по заданным критериям.
+ * Обрабатывает POST запросы по пути "/marketplace/products/search".
+ * Требует аутентификации пользователя для выполнения операции.
+ */
 @WebServlet("/marketplace/products/search")
 public class ProductSearchServlet extends HttpServlet {
 
@@ -36,35 +38,92 @@ public class ProductSearchServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
 
+    /**
+     * Инициализирует сервлет, получая контроллеры из контекста приложения.
+     */
     @Override
     public void init() {
         this.productController = (IProductController) getServletContext().getAttribute("productController");
         this.userController = (IUserController) getServletContext().getAttribute("userController");
     }
 
+    /**
+     * Обрабатывает POST запрос на поиск продуктов.
+     * Выполняет последовательно: аутентификацию, парсинг DTO, валидацию цен,
+     * создание фильтра, поиск продуктов и отправку результата.
+     * @param req HTTP запрос
+     * @param resp HTTP ответ
+     */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        if (!userController.isAuthenticated()) {
-            resp.setStatus(401);
-            objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(USER_UNAUTHORIZED, List.of("Пользователь должен войти")));
+        if (!authenticateUser(resp)) {
             return;
         }
 
-        ProductSearchRequest filterDto;
+        ProductSearchRequest filterDto = parseSearchRequest(req, resp);
+        if (filterDto == null) {
+            return;
+        }
+
+        if (!validatePriceRange(filterDto, resp)) {
+            return;
+        }
+
+        SearchFilter searchFilter = createSearchFilter(filterDto);
+
+        List<Product> products = searchProducts(searchFilter, resp);
+        if (products == null) {
+            return;
+        }
+
+        List<ProductResponse> responseList = convertToResponseList(products);
+
+        sendSuccessResponse(responseList, resp);
+    }
+
+    /**
+     * Проверяет аутентификацию текущего пользователя.
+     * @param resp HTTP ответ для отправки ошибки в случае неудачи
+     * @return true если пользователь аутентифицирован, false в противном случае
+     */
+    private boolean authenticateUser(HttpServletResponse resp) throws IOException {
+        if (!userController.isAuthenticated()) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            objectMapper.writeValue(resp.getWriter(),
+                    new ErrorResponse(USER_UNAUTHORIZED, List.of("Пользователь должен войти")));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Парсит DTO запроса на поиск продуктов из тела HTTP запроса.
+     * @param req HTTP запрос
+     * @param resp HTTP ответ для отправки ошибки в случае неудачи
+     * @return DTO запроса или null в случае ошибки парсинга
+     */
+    private ProductSearchRequest parseSearchRequest(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
         try {
-            filterDto = objectMapper.readValue(req.getInputStream(), ProductSearchRequest.class);
+            return objectMapper.readValue(req.getInputStream(), ProductSearchRequest.class);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(),
                     new ErrorResponse(ResponseMessages.INVALID_JSON, List.of(e.getMessage())));
-            return;
+            return null;
         }
+    }
 
+    /**
+     * Валидирует корректность диапазона цен (minPrice <= maxPrice).
+     * @param filterDto DTO запроса на поиск продуктов
+     * @param resp HTTP ответ для отправки ошибки в случае неудачи
+     * @return true если диапазон цен корректен, false в противном случае
+     */
+    private boolean validatePriceRange(ProductSearchRequest filterDto, HttpServletResponse resp) throws IOException {
         BigDecimal min = ParseUtils.parseBigDecimal(filterDto.getMinPrice());
         BigDecimal max = ParseUtils.parseBigDecimal(filterDto.getMaxPrice());
 
@@ -75,34 +134,65 @@ public class ProductSearchServlet extends HttpServlet {
                     new ErrorResponse(ResponseMessages.VALIDATION_FAILED,
                             List.of(PRODUCT_INVALID_MIN_MAX_PRICE))
             );
-            return;
+            return false;
         }
+        return true;
+    }
 
-        var searchFilter = new SearchFilter(
+    /**
+     * Создает объект фильтра для поиска на основе DTO запроса.
+     * @param filterDto DTO запроса на поиск продуктов
+     * @return объект SearchFilter с параметрами поиска
+     */
+    private SearchFilter createSearchFilter(ProductSearchRequest filterDto) {
+        BigDecimal min = ParseUtils.parseBigDecimal(filterDto.getMinPrice());
+        BigDecimal max = ParseUtils.parseBigDecimal(filterDto.getMaxPrice());
+
+        return new SearchFilter(
                 filterDto.getKeyword(),
                 filterDto.getCategory(),
                 filterDto.getBrand(),
                 min,
                 max
         );
+    }
 
-        List<Product> products;
+    /**
+     * Выполняет поиск продуктов по заданному фильтру.
+     * @param searchFilter фильтр для поиска продуктов
+     * @param resp HTTP ответ для отправки ошибки в случае неудачи
+     * @return список найденных продуктов или null в случае ошибки
+     */
+    private List<Product> searchProducts(SearchFilter searchFilter, HttpServletResponse resp) throws IOException {
         try {
-            products = productController.searchProducts(searchFilter);
+            return productController.searchProducts(searchFilter);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             objectMapper.writeValue(resp.getWriter(),
                     new ErrorResponse(ResponseMessages.PRODUCT_SEARCH_FAILED, List.of(e.getMessage())));
-            return;
+            return null;
         }
+    }
 
-        List<ProductResponse> responseList = products.stream()
+    /**
+     * Преобразует список сущностей Product в список DTO ответов.
+     * @param products список сущностей Product
+     * @return список DTO ответов ProductResponse
+     */
+    private List<ProductResponse> convertToResponseList(List<Product> products) {
+        return products.stream()
                 .map(productMapper::toResponse)
                 .collect(Collectors.toList());
+    }
 
+    /**
+     * Отправляет успешный ответ с результатами поиска.
+     * @param responseList список DTO ответов с найденными продуктами
+     * @param resp HTTP ответ
+     */
+    private void sendSuccessResponse(List<ProductResponse> responseList, HttpServletResponse resp) throws IOException {
         resp.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(resp.getWriter(),
-                new ProductSearchResponse(responseList));
+        objectMapper.writeValue(resp.getWriter(), new ProductSearchResponse(responseList));
     }
 
 }

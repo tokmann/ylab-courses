@@ -1,6 +1,10 @@
 package ru.ylab.tasks.task3.dto.request.product;
 
 
+/**
+ * DTO для запроса на создание продукта.
+ * Содержит данные, необходимые для создания нового продукта.
+ */
 public class ProductCreateRequest {
 
     private String name;

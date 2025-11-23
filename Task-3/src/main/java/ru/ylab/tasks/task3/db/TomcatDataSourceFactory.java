@@ -2,9 +2,15 @@ package ru.ylab.tasks.task3.db;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 
+/**
+ * Фабрика для создания и настройки источника данных Apache Tomcat.
+ * Инициализирует и настраивает пул соединений с базой данных.
+ */
 public class TomcatDataSourceFactory {
 
     private static DataSource dataSource;
+
+    private TomcatDataSourceFactory() {}
 
     static {
         try {
@@ -27,8 +33,6 @@ public class TomcatDataSourceFactory {
             throw new RuntimeException("Error creating DataSource", e);
         }
     }
-
-    private TomcatDataSourceFactory() {}
 
     public static DataSource getDataSource() {
         return dataSource;

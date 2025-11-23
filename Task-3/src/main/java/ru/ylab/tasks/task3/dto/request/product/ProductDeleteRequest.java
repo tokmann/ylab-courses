@@ -1,5 +1,9 @@
 package ru.ylab.tasks.task3.dto.request.product;
 
+/**
+ * DTO для запроса на удаление продукта.
+ * Содержит идентификатор продукта для удаления.
+ */
 public class ProductDeleteRequest {
 
     private Long id;

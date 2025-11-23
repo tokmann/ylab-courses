@@ -1,5 +1,9 @@
 package ru.ylab.tasks.task3.dto.request.user;
 
+/**
+ * DTO для запроса на аутентификацию пользователя.
+ * Содержит учетные данные для входа в систему.
+ */
 public class LoginRequest {
 
     private String login;

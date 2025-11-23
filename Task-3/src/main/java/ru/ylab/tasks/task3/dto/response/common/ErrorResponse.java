@@ -2,6 +2,10 @@ package ru.ylab.tasks.task3.dto.response.common;
 
 import java.util.List;
 
+/**
+ * DTO для ответа с информацией об ошибке.
+ * Содержит основное сообщение и детали ошибки.
+ */
 public class ErrorResponse {
 
     private String message;
