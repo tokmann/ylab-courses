@@ -4,6 +4,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import ru.ylab.tasks.task3.aop.AuditAspect;
 import ru.ylab.tasks.task3.controller.ProductController;
 import ru.ylab.tasks.task3.controller.UserController;
 import ru.ylab.tasks.task3.db.DbConfig;
@@ -15,10 +16,6 @@ import ru.ylab.tasks.task3.repository.jdbc.JdbcUserRepository;
 import ru.ylab.tasks.task3.security.AuthService;
 import ru.ylab.tasks.task3.service.audit.AuditService;
 import ru.ylab.tasks.task3.service.product.ProductService;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 @WebListener
 public class App implements ServletContextListener {
@@ -40,9 +37,12 @@ public class App implements ServletContextListener {
             AuthService authService = new AuthService(userRepository);
             AuditService auditService = new AuditService();
 
+            AuditAspect.setAuditService(auditService);
+            AuditAspect.setAuthService(authService);
+
             // Контроллеры
-            ProductController productController = new ProductController(productService, authService, auditService);
-            UserController userController = new UserController(authService, auditService);
+            ProductController productController = new ProductController(productService);
+            UserController userController = new UserController(authService);
 
             // Сохраняем контроллеры в контекст
             ctx.setAttribute("productController", productController);

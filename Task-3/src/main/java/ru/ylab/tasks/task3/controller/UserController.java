@@ -16,11 +16,9 @@ import static ru.ylab.tasks.task3.constant.AuditMessages.*;
 public class UserController {
 
     private final AuthService auth;
-    private final AuditService audit;
 
-    public UserController(AuthService auth, AuditService audit) {
+    public UserController(AuthService auth) {
         this.auth = auth;
-        this.audit = audit;
     }
 
     /**
@@ -31,13 +29,7 @@ public class UserController {
      * @return true, если вход успешен; false — иначе
      */
     public boolean login(String login, String password) {
-        boolean success = auth.login(login, password);
-        if (success) {
-            audit.log(String.format(LOGIN_SUCCESS, login));
-        } else {
-            audit.log(String.format(LOGIN_FAILED, login));
-        }
-        return success;
+        return auth.login(login, password);
     }
 
     /**
@@ -45,9 +37,6 @@ public class UserController {
      * Логирует событие выхода и очищает текущую сессию.
      */
     public void logout() {
-        if (auth.isAuthenticated()) {
-            audit.log(String.format(LOGOUT_SUCCESS, auth.getCurrentUserLogin()));
-        }
         auth.logout();
     }
 
@@ -62,13 +51,7 @@ public class UserController {
      */
     public boolean register(String login, String password, String requestedRole) {
         Role assignedRole = auth.determineAssignedRole(requestedRole);
-        boolean ok = auth.register(login, password, requestedRole);
-        if (ok) {
-            audit.log(String.format(AuditMessages.USER_REGISTERED, login, assignedRole));
-        } else {
-            audit.log(String.format(AuditMessages.USER_REGISTER_FAILED, login));
-        }
-        return ok;
+        return auth.register(login, password, String.valueOf(assignedRole));
     }
 
     /**

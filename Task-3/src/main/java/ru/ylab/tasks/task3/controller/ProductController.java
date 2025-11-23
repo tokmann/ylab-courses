@@ -19,13 +19,9 @@ import static ru.ylab.tasks.task3.constant.AuditMessages.*;
 public class ProductController {
 
     private final ProductService productService;
-    private final AuthService authService;
-    private final AuditService audit;
 
-    public ProductController(ProductService productService, AuthService authService, AuditService audit) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.authService = authService;
-        this.audit = audit;
     }
 
     /**
@@ -35,7 +31,6 @@ public class ProductController {
      */
     public void addProduct(Product product) {
         productService.create(product);
-        audit.log(String.format(PRODUCT_ADDED, authService.getCurrentUserLogin(), product.getName()));
     }
 
     /**
@@ -49,7 +44,6 @@ public class ProductController {
      */
     public void updateProduct(Long id, String name, String category, String brand, BigDecimal price, String desc) {
         productService.update(id, name, category, brand, price, desc);
-        audit.log(String.format(PRODUCT_UPDATED, authService.getCurrentUserLogin(), id));
     }
 
     /**
@@ -58,7 +52,6 @@ public class ProductController {
      */
     public void deleteProduct(Long id) {
         productService.delete(id);
-        audit.log(String.format(PRODUCT_DELETED, authService.getCurrentUserLogin(), id));
     }
 
     /**
@@ -76,8 +69,6 @@ public class ProductController {
      * @return список товаров, удовлетворяющих фильтру
      */
     public List<Product> searchProducts(SearchFilter filter) {
-        List<Product> res = productService.search(filter);
-        audit.log(String.format(PRODUCT_SEARCH, authService.getCurrentUserLogin()));
-        return res;
+        return productService.search(filter);
     }
 }

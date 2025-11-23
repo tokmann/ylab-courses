@@ -24,6 +24,7 @@
         <aspectj-version>1.9.7</aspectj-version>
         <aspectj-maven-plugin>1.15.0</aspectj-maven-plugin>
         <tomcat-jdcb.version>10.1.49</tomcat-jdcb.version>
+        <aspectj-weaver.version>1.9.21</aspectj-weaver.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
@@ -60,6 +61,10 @@
                     <verbose>true</verbose>
                     <Xlint>warning</Xlint>
                     <encoding>UTF-8</encoding>
+                    <excludes>
+                        <exclude>**/mapper/*.java</exclude>
+                        <exclude>**/dto/**</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -85,6 +90,12 @@
             <artifactId>aspectjrt</artifactId>
             <version>${aspectj-version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj-weaver.version}</version>
         </dependency>
 
         <dependency>
