@@ -93,7 +93,7 @@ public class ProductSearchServlet extends HttpServlet {
         if (!userController.isAuthenticated()) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             objectMapper.writeValue(resp.getWriter(),
-                    new ErrorResponse(USER_UNAUTHORIZED, List.of("Пользователь должен войти")));
+                    new ErrorResponse(USER_UNAUTHORIZED, List.of("User must be logged in")));
             return false;
         }
         return true;
