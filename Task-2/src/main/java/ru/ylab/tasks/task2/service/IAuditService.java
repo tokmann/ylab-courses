@@ -1,0 +1,14 @@
+package ru.ylab.tasks.task2.service;
+
+/**
+ * Интерфейс сервиса аудита действий пользователей.
+ * Используется для логирования операций.
+ */
+public interface IAuditService {
+
+    /**
+     * Логирует сообщение с временной меткой.
+     */
+    void log(String message);
+}
+
