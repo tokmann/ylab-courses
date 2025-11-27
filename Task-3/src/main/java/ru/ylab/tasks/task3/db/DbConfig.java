@@ -52,5 +52,17 @@ public class DbConfig {
         return props.getProperty("liquibase.init-schemas");
     }
 
+    public String getRepositoryType() {
+        return props.getProperty("repository.type");
+    }
+
+    public String getProductsFile() {
+        return props.getProperty("repository.products.file");
+    }
+
+    public String getUsersFile() {
+        return props.getProperty("repository.users.file");
+    }
+
 }
 

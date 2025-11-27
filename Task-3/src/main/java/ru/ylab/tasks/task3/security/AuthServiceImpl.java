@@ -3,18 +3,18 @@ package ru.ylab.tasks.task3.security;
 import ru.ylab.tasks.task3.constant.Role;
 import ru.ylab.tasks.task3.exception.AccessDeniedException;
 import ru.ylab.tasks.task3.model.User;
-import ru.ylab.tasks.task3.repository.UserRepository;
+import ru.ylab.tasks.task3.repository.IUserRepository;
 
 /**
  * Сервис авторизации и регистрации пользователей.
  * Управляет текущей сессией пользователя и его ролью.
  */
-public class AuthService implements IAuthService {
+public class AuthServiceImpl implements IAuthService {
 
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
     private User currentUser;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthServiceImpl(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

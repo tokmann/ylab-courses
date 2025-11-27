@@ -4,24 +4,25 @@ import ru.ylab.tasks.task3.constant.Role;
 import ru.ylab.tasks.task3.controller.interfaces.IUserController;
 import ru.ylab.tasks.task3.exception.AccessDeniedException;
 import ru.ylab.tasks.task3.model.User;
-import ru.ylab.tasks.task3.security.AuthService;
-import ru.ylab.tasks.task3.service.audit.AuditService;
+import ru.ylab.tasks.task3.security.AuthServiceImpl;
+import ru.ylab.tasks.task3.security.IAuthService;
+import ru.ylab.tasks.task3.service.audit.AuditServiceImpl;
 
 /**
  * Контроллер, управляющий авторизацией и регистрацией пользователей.
- * Вызывает методы {@link AuthService} и записывает действия через {@link AuditService}.
+ * Вызывает методы {@link AuthServiceImpl} и записывает действия через {@link AuditServiceImpl}.
  */
-public class UserController implements IUserController {
+public class UserControllerImpl implements IUserController {
 
-    private final AuthService auth;
+    private final IAuthService auth;
 
-    public UserController(AuthService auth) {
+    public UserControllerImpl(IAuthService auth) {
         this.auth = auth;
     }
 
     /**
      * Выполняет вход пользователя в систему.
-     * Логирует успешный или неуспешный вход через {@link AuditService}.
+     * Логирует успешный или неуспешный вход через {@link AuditServiceImpl}.
      * @param login    логин пользователя
      * @param password пароль пользователя
      * @return true, если вход успешен; false — иначе

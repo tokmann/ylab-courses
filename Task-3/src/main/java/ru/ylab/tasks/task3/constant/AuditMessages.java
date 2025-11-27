@@ -1,10 +1,10 @@
 package ru.ylab.tasks.task3.constant;
 
-import ru.ylab.tasks.task3.service.audit.AuditService;
+import ru.ylab.tasks.task3.service.audit.AuditServiceImpl;
 
 /**
  * Константы сообщений для аудита действий пользователей.
- * Используются вместе с {@link AuditService} для логирования операций
+ * Используются вместе с {@link AuditServiceImpl} для логирования операций
  * добавления, изменения, удаления товаров и действий с пользователями.
  */
 public final class AuditMessages {

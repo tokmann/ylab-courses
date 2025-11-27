@@ -1,12 +1,10 @@
 package ru.ylab.tasks.task3.servlet.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.ylab.tasks.task3.controller.UserController;
 import ru.ylab.tasks.task3.controller.interfaces.IUserController;
 import ru.ylab.tasks.task3.dto.response.common.ErrorResponse;
 import ru.ylab.tasks.task3.dto.response.user.LogoutResponse;

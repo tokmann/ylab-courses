@@ -1,7 +1,7 @@
 package ru.ylab.tasks.task3.service.product;
 
 import ru.ylab.tasks.task3.model.Product;
-import ru.ylab.tasks.task3.repository.ProductRepository;
+import ru.ylab.tasks.task3.repository.IProductRepository;
 import ru.ylab.tasks.task3.util.FilterKey;
 import ru.ylab.tasks.task3.util.SearchFilter;
 import ru.ylab.tasks.task3.service.performance.LruCache;
@@ -14,12 +14,12 @@ import java.util.*;
  * Сервис для работы с товарами.
  * Содержит бизнес-логику CRUD-операций, поиск с фильтрацией и кеширование результатов поиска.
  */
-public class ProductService implements IProductService {
+public class ProductServiceImpl implements IProductService {
 
-    private final ProductRepository repo;
+    private final IProductRepository repo;
     private final LruCache<FilterKey, List<Product>> cache = new LruCache<>(50);
 
-    public ProductService(ProductRepository repository) {
+    public ProductServiceImpl(IProductRepository repository) {
         this.repo = repository;
     }
 

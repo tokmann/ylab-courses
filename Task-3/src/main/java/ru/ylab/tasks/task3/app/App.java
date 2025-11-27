@@ -5,49 +5,27 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ru.ylab.tasks.task3.aop.AuditAspect;
-import ru.ylab.tasks.task3.controller.ProductController;
-import ru.ylab.tasks.task3.controller.UserController;
-import ru.ylab.tasks.task3.db.DbConfig;
+import ru.ylab.tasks.task3.config.AppConfig;
 import ru.ylab.tasks.task3.db.migration.LiquibaseRunner;
-import ru.ylab.tasks.task3.repository.ProductRepository;
-import ru.ylab.tasks.task3.repository.UserRepository;
-import ru.ylab.tasks.task3.repository.jdbc.JdbcProductRepository;
-import ru.ylab.tasks.task3.repository.jdbc.JdbcUserRepository;
-import ru.ylab.tasks.task3.security.AuthService;
-import ru.ylab.tasks.task3.service.audit.AuditService;
-import ru.ylab.tasks.task3.service.product.ProductService;
 
 @WebListener
 public class App implements ServletContextListener {
 
+    @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext ctx = sce.getServletContext();
 
         try {
-            // Миграции Liquibase
-            LiquibaseRunner liquibaseRunner = new LiquibaseRunner(new DbConfig());
+            AppConfig config = new AppConfig();
+
+            LiquibaseRunner liquibaseRunner = new LiquibaseRunner(config.dbConfig());
             liquibaseRunner.updateDatabase();
 
-            // Репозитории
-            ProductRepository productRepository = new JdbcProductRepository();
-            UserRepository userRepository = new JdbcUserRepository();
+            AuditAspect.setAuditService(config.auditService());
+            AuditAspect.setAuthService(config.authService());
 
-            // Сервисы
-            ProductService productService = new ProductService(productRepository);
-            AuthService authService = new AuthService(userRepository);
-            AuditService auditService = new AuditService();
-
-            // Зависимости аспекта для аудита
-            AuditAspect.setAuditService(auditService);
-            AuditAspect.setAuthService(authService);
-
-            // Контроллеры
-            ProductController productController = new ProductController(productService);
-            UserController userController = new UserController(authService);
-
-            // Сохранение контроллеров в контекст
-            ctx.setAttribute("productController", productController);
-            ctx.setAttribute("userController", userController);
+            ctx.setAttribute("productController", config.productController());
+            ctx.setAttribute("userController", config.userController());
 
             System.out.println("Приложение запущено успешно");
 

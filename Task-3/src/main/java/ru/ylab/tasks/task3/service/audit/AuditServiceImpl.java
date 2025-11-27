@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * Сервис аудита.
  * Отвечает за логирование действий системы (например, авторизация, изменения данных и т.д.)
  */
-public class AuditService implements IAuditService{
+public class AuditServiceImpl implements IAuditService{
 
     /**
      * Логирует сообщение с отметкой времени в консоль.

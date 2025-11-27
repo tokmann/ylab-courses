@@ -1,12 +1,12 @@
 package ru.ylab.tasks.task3.util;
 
-import ru.ylab.tasks.task3.service.product.ProductService;
+import ru.ylab.tasks.task3.service.product.ProductServiceImpl;
 
 import java.math.BigDecimal;
 
 /**
  * Модель фильтра для поиска товаров.
- * Используется для передачи критериев поиска в {@link ProductService} и
+ * Используется для передачи критериев поиска в {@link ProductServiceImpl} и
  * формирования ключа {@link FilterKey} при кэшировании результатов.
  */
 public record SearchFilter (

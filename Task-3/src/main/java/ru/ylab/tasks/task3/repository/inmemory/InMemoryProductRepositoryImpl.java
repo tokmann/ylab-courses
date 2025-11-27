@@ -1,7 +1,7 @@
 package ru.ylab.tasks.task3.repository.inmemory;
 
 import ru.ylab.tasks.task3.model.Product;
-import ru.ylab.tasks.task3.repository.ProductRepository;
+import ru.ylab.tasks.task3.repository.IProductRepository;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Хранит продукты в памяти и поддерживает индексы по категориям, брендам и ценам.
  * Обеспечивает быстрое чтение и поиск.
  */
-public class InMemoryProductRepository implements ProductRepository {
+public class InMemoryProductRepositoryImpl implements IProductRepository {
 
     private final Map<Long, Product> productsById = new HashMap<>();
     private final Map<String, Set<Long>> indexByCategory = new HashMap<>();
@@ -21,7 +21,7 @@ public class InMemoryProductRepository implements ProductRepository {
 
     private final AtomicLong idGenerator = new AtomicLong(1);
 
-    public InMemoryProductRepository(Collection<Product> initialProducts) {
+    public InMemoryProductRepositoryImpl(Collection<Product> initialProducts) {
         initialProducts.forEach(this::save);
     }
 

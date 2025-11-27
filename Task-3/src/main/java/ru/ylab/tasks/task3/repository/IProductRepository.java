@@ -9,7 +9,7 @@ import java.util.*;
  * Репозиторий для управления товарами.
  * Определяет базовые операции CRUD и методы поиска по различным параметрам.
  */
-public interface ProductRepository {
+public interface IProductRepository {
     /**
      * Сохраняет новый товар или обновляет существующий.
      * @param product товар для сохранения

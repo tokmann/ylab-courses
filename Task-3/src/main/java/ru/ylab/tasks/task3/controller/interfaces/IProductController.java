@@ -1,7 +1,6 @@
 package ru.ylab.tasks.task3.controller.interfaces;
 
 import ru.ylab.tasks.task3.model.Product;
-import ru.ylab.tasks.task3.service.product.ProductService;
 import ru.ylab.tasks.task3.util.SearchFilter;
 
 import java.math.BigDecimal;

@@ -2,8 +2,9 @@ package ru.ylab.tasks.task3.controller;
 
 import ru.ylab.tasks.task3.controller.interfaces.IProductController;
 import ru.ylab.tasks.task3.model.Product;
-import ru.ylab.tasks.task3.service.audit.AuditService;
-import ru.ylab.tasks.task3.service.product.ProductService;
+import ru.ylab.tasks.task3.service.audit.AuditServiceImpl;
+import ru.ylab.tasks.task3.service.product.IProductService;
+import ru.ylab.tasks.task3.service.product.ProductServiceImpl;
 import ru.ylab.tasks.task3.util.SearchFilter;
 
 import java.math.BigDecimal;
@@ -11,19 +12,19 @@ import java.util.List;
 
 /**
  * Контроллер управления товарами.
- * Делегирует операции {@link ProductService} и фиксирует события через {@link AuditService}.
+ * Делегирует операции {@link ProductServiceImpl} и фиксирует события через {@link AuditServiceImpl}.
  */
-public class ProductController implements IProductController {
+public class ProductControllerImpl implements IProductController {
 
-    private final ProductService productService;
+    private final IProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductControllerImpl(IProductService productService) {
         this.productService = productService;
     }
 
     /**
      * Добавляет новый товар.
-     * Делегирует создание товара {@link ProductService} и логирует событие через {@link AuditService}.
+     * Делегирует создание товара {@link ProductServiceImpl} и логирует событие через {@link AuditServiceImpl}.
      * @param product товар для добавления
      */
     @Override
@@ -65,7 +66,7 @@ public class ProductController implements IProductController {
 
     /**
      * Выполняет поиск товаров по фильтру.
-     * Делегирует поиск сервису {@link ProductService} и логирует действие пользователя.
+     * Делегирует поиск сервису {@link ProductServiceImpl} и логирует действие пользователя.
      * @param filter фильтр поиска
      * @return список товаров, удовлетворяющих фильтру
      */

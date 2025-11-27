@@ -32,7 +32,7 @@ public class AuditAspect {
      * Вызывается после успешного выполнения метода addProduct в ProductController.
      * @param jp точка соединения, содержащая информацию о выполняемом методе
      */
-    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductController.addProduct(..))")
+    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductControllerImpl.addProduct(..))")
     public void auditAddProduct(JoinPoint jp) {
         Product product = (Product) jp.getArgs()[0];
         auditService.log(String.format(PRODUCT_ADDED, product.getName(), authService.getCurrentUserLogin()));
@@ -43,7 +43,7 @@ public class AuditAspect {
      * Вызывается после успешного выполнения метода updateProduct в ProductController.
      * @param jp точка соединения, содержащая информацию о выполняемом методе
      */
-    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductController.updateProduct(..))")
+    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductControllerImpl.updateProduct(..))")
     public void auditUpdateProduct(JoinPoint jp) {
         Long productId = (Long) jp.getArgs()[0];
         auditService.log(String.format(PRODUCT_UPDATED, productId, authService.getCurrentUserLogin()));
@@ -54,7 +54,7 @@ public class AuditAspect {
      * Вызывается после успешного выполнения метода deleteProduct в ProductController.
      * @param jp точка соединения, содержащая информацию о выполняемом методе
      */
-    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductController.deleteProduct(..))")
+    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductControllerImpl.deleteProduct(..))")
     public void auditDeleteProduct(JoinPoint jp) {
         Long productId = (Long) jp.getArgs()[0];
         auditService.log(String.format(PRODUCT_DELETED, productId, authService.getCurrentUserLogin()));
@@ -65,7 +65,7 @@ public class AuditAspect {
      * Вызывается после успешного выполнения метода searchProducts в ProductController.
      * @param jp точка соединения, содержащая информацию о выполняемом методе
      */
-    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductController.searchProducts(..))")
+    @AfterReturning("execution(* ru.ylab.tasks.task3.controller.ProductControllerImpl.searchProducts(..))")
     public void auditSearchProducts(JoinPoint jp) {
         auditService.log(String.format(PRODUCT_SEARCH, authService.getCurrentUserLogin()));
     }
@@ -76,7 +76,7 @@ public class AuditAspect {
      * @param jp точка соединения, содержащая информацию о выполняемом методе
      * @param success результат попытки входа (true - успешно, false - неудачно)
      */
-    @AfterReturning(pointcut = "execution(* ru.ylab.tasks.task3.controller.UserController.login(..))", returning = "success")
+    @AfterReturning(pointcut = "execution(* ru.ylab.tasks.task3.controller.UserControllerImpl.login(..))", returning = "success")
     public void auditLogin(JoinPoint jp, boolean success) {
         String login = (String) jp.getArgs()[0];
         if (success) {
@@ -91,7 +91,7 @@ public class AuditAspect {
      * Вызывается перед выполнением метода logout в UserController.
      * @param jp точка соединения, содержащая информацию о выполняемом методе
      */
-    @Before("execution(* ru.ylab.tasks.task3.controller.UserController.logout())")
+    @Before("execution(* ru.ylab.tasks.task3.controller.UserControllerImpl.logout())")
     public void auditLogout(JoinPoint jp) {
         if (authService.isAuthenticated()) {
             auditService.log(String.format(LOGOUT_SUCCESS, authService.getCurrentUserLogin()));
@@ -104,7 +104,7 @@ public class AuditAspect {
      * @param jp точка соединения, содержащая информацию о выполняемом методе
      * @param success результат попытки регистрации (true - успешно, false - неудачно)
      */
-    @AfterReturning(pointcut = "execution(* ru.ylab.tasks.task3.controller.UserController.register(..))", returning = "success")
+    @AfterReturning(pointcut = "execution(* ru.ylab.tasks.task3.controller.UserControllerImpl.register(..))", returning = "success")
     public void auditRegister(JoinPoint jp, boolean success) {
         String login = (String) jp.getArgs()[0];
         String requestedRole = (String) jp.getArgs()[2];

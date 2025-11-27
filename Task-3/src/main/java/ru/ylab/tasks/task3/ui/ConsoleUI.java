@@ -1,10 +1,10 @@
 package ru.ylab.tasks.task3.ui;
 
-import ru.ylab.tasks.task3.controller.ProductController;
-import ru.ylab.tasks.task3.controller.UserController;
+import ru.ylab.tasks.task3.controller.ProductControllerImpl;
+import ru.ylab.tasks.task3.controller.UserControllerImpl;
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.model.User;
-import ru.ylab.tasks.task3.security.AuthService;
+import ru.ylab.tasks.task3.security.AuthServiceImpl;
 import ru.ylab.tasks.task3.service.performance.MetricService;
 import ru.ylab.tasks.task3.util.SearchFilter;
 
@@ -21,16 +21,16 @@ import static ru.ylab.tasks.task3.constant.ConsoleUIConstants.*;
  */
 public class ConsoleUI {
 
-    private final ProductController productController;
-    private final UserController userController;
-    private final AuthService authService;
+    private final ProductControllerImpl productController;
+    private final UserControllerImpl userController;
+    private final AuthServiceImpl authService;
     private final MetricService metricService;
 
     private final Scanner scanner = new Scanner(System.in);
 
-    public ConsoleUI(ProductController productController,
-                     UserController userController,
-                     AuthService authService,
+    public ConsoleUI(ProductControllerImpl productController,
+                     UserControllerImpl userController,
+                     AuthServiceImpl authService,
                      MetricService metricService) {
         this.productController = productController;
         this.userController = userController;

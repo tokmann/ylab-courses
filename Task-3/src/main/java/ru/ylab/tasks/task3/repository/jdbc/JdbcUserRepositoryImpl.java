@@ -3,12 +3,8 @@ package ru.ylab.tasks.task3.repository.jdbc;
 import ru.ylab.tasks.task3.constant.Role;
 import ru.ylab.tasks.task3.db.ConnectionFactory;
 import ru.ylab.tasks.task3.model.User;
-import ru.ylab.tasks.task3.repository.UserRepository;
+import ru.ylab.tasks.task3.repository.IUserRepository;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +16,9 @@ import static ru.ylab.tasks.task3.constant.SqlConstants.*;
  * Реализация репозитория пользователей на основе JDBC.
  * Обеспечивает операции CRUD для пользователей системы.
  */
-public class JdbcUserRepository implements UserRepository {
+public class JdbcUserRepositoryImpl implements IUserRepository {
 
-    public JdbcUserRepository() {}
+    public JdbcUserRepositoryImpl() {}
 
     /**
      * Сохраняет пользователя в базе данных.

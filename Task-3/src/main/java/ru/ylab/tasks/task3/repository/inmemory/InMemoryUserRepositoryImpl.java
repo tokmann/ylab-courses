@@ -1,7 +1,7 @@
 package ru.ylab.tasks.task3.repository.inmemory;
 
 import ru.ylab.tasks.task3.model.User;
-import ru.ylab.tasks.task3.repository.UserRepository;
+import ru.ylab.tasks.task3.repository.IUserRepository;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,14 +10,14 @@ import java.util.concurrent.atomic.AtomicLong;
  * Репозиторий для хранения и управления пользователями.
  * Работает с внутренней мапой и сохраняет данные в файл users.txt.
  */
-public class InMemoryUserRepository implements UserRepository {
+public class InMemoryUserRepositoryImpl implements IUserRepository {
 
     private final Map<Long, User> usersById = new HashMap<>();
     private final Map<String, User> usersByLogin = new HashMap<>();
 
     private final AtomicLong idGenerator = new AtomicLong(1);
 
-    public InMemoryUserRepository(Collection<User> initialUsers) {
+    public InMemoryUserRepositoryImpl(Collection<User> initialUsers) {
         initialUsers.forEach(this::save);
     }
 

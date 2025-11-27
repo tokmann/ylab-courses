@@ -2,12 +2,8 @@ package ru.ylab.tasks.task3.repository.jdbc;
 
 import ru.ylab.tasks.task3.db.ConnectionFactory;
 import ru.ylab.tasks.task3.model.Product;
-import ru.ylab.tasks.task3.repository.ProductRepository;
+import ru.ylab.tasks.task3.repository.IProductRepository;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,9 +17,9 @@ import static ru.ylab.tasks.task3.constant.SqlConstants.*;
  * Реализация репозитория продуктов на основе JDBC.
  * Обеспечивает сохранение, поиск, обновление и удаление продуктов в базе данных.
  */
-public class JdbcProductRepository implements ProductRepository {
+public class JdbcProductRepositoryImpl implements IProductRepository {
 
-    public JdbcProductRepository() {}
+    public JdbcProductRepositoryImpl() {}
 
     /**
      * Сохраняет продукт в базе данных.

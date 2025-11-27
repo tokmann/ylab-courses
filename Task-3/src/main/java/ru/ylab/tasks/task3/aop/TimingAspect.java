@@ -15,8 +15,8 @@ public class TimingAspect {
     /**
      * Точка среза, определяющая все методы в ProductController и UserController.
      */
-    @Pointcut("execution(* ru.ylab.tasks.task3.controller.ProductController.*(..)) || "+
-                     "execution(* ru.ylab.tasks.task3.controller.UserController.*(..))")
+    @Pointcut("execution(* ru.ylab.tasks.task3.controller.ProductControllerImpl.*(..)) || "+
+                     "execution(* ru.ylab.tasks.task3.controller.UserControllerImpl.*(..))")
     public void allControllerMethods() {
     }
 
