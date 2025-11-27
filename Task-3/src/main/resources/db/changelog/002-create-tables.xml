@@ -6,7 +6,7 @@
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
     <!-- Последовательности -->
-    <changeSet id="3-create-sequences" author="tokman">
+    <changeSet id="4-create-sequences" author="tokman">
         <preConditions onFail="MARK_RAN">
             <not>
                 <sequenceExists sequenceName="user_seq" schemaName="marketplace"/>
@@ -20,7 +20,7 @@
     </changeSet>
 
     <!-- Таблица пользователей -->
-    <changeSet id="4-create-users-table" author="tokman">
+    <changeSet id="5-create-users-table" author="tokman">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="users" schemaName="marketplace"/>
@@ -49,7 +49,7 @@
     </changeSet>
 
     <!-- Таблица товаров -->
-    <changeSet id="5-create-products-table" author="tokman">
+    <changeSet id="6-create-products-table" author="tokman">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="products" schemaName="marketplace"/>

@@ -45,7 +45,6 @@ public class LiquibaseRunner {
             database.setDefaultSchemaName(config.getDefaultSchema());
             database.setLiquibaseSchemaName(config.getLiquibaseSchema());
 
-
             Liquibase liquibaseMain = new Liquibase(
                     config.getLiquibaseChangelog(),
                     new ClassLoaderResourceAccessor(),

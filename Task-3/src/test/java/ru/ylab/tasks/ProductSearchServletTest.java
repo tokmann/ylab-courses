@@ -75,7 +75,8 @@ class ProductSearchServletTest {
         servlet.doPost(req, resp);
 
         verify(resp).setStatus(401);
-        assertTrue(outContent.toString().contains("Пользователь должен войти"));
+        System.out.println(outContent);
+        assertTrue(outContent.toString().contains("User must be logged in"));
     }
 
     @Test

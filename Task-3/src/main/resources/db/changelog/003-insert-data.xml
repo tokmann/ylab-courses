@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
-    <changeSet id="6-seed-users" author="tokman">
+    <changeSet id="7-seed-users" author="tokman">
         <insert tableName="users" schemaName="marketplace">
             <column name="login" value="admin"/>
             <column name="password" value="admin123"/>
@@ -19,7 +19,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="7-seed-products" author="tokman">
+    <changeSet id="8-seed-products" author="tokman">
         <insert tableName="products" schemaName="marketplace">
             <column name="name" value="Laptop X1"/>
             <column name="category" value="Laptops"/>
