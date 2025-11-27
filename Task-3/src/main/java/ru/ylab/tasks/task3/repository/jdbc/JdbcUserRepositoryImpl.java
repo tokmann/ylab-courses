@@ -2,6 +2,7 @@ package ru.ylab.tasks.task3.repository.jdbc;
 
 import ru.ylab.tasks.task3.constant.Role;
 import ru.ylab.tasks.task3.db.ConnectionFactory;
+import ru.ylab.tasks.task3.exception.DatabaseException;
 import ru.ylab.tasks.task3.model.User;
 import ru.ylab.tasks.task3.repository.IUserRepository;
 
@@ -50,7 +51,7 @@ public class JdbcUserRepositoryImpl implements IUserRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка сохранения пользователя: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка сохранения пользователя: ", e);
         }
     }
 
@@ -69,7 +70,7 @@ public class JdbcUserRepositoryImpl implements IUserRepository {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка поиска пользователя по id: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка поиска пользователя по id: ", e);
         }
     }
 
@@ -88,7 +89,7 @@ public class JdbcUserRepositoryImpl implements IUserRepository {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка поиска пользователя по login: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка поиска пользователя по login: ", e);
         }
     }
 
@@ -107,7 +108,7 @@ public class JdbcUserRepositoryImpl implements IUserRepository {
             }
             return users;
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка получения всех пользователей: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка получения всех пользователей: ", e);
         }
     }
 
@@ -125,7 +126,7 @@ public class JdbcUserRepositoryImpl implements IUserRepository {
                 return rs.next();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка проверки существования login: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка проверки существования login: ", e);
         }
     }
 
@@ -141,7 +142,7 @@ public class JdbcUserRepositoryImpl implements IUserRepository {
             ps.setLong(1, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка удаления пользователя: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка удаления пользователя: ", e);
         }
     }
 

@@ -1,6 +1,7 @@
 package ru.ylab.tasks.task3.repository.jdbc;
 
 import ru.ylab.tasks.task3.db.ConnectionFactory;
+import ru.ylab.tasks.task3.exception.DatabaseException;
 import ru.ylab.tasks.task3.model.Product;
 import ru.ylab.tasks.task3.repository.IProductRepository;
 
@@ -55,7 +56,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка сохранения продукта: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка сохранения продукта: ", e);
         }
     }
 
@@ -73,7 +74,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
                 list.add(mapProduct(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка получения всех продуктов: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка получения всех продуктов: ", e);
         }
         return list;
     }
@@ -93,7 +94,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка поиска продукта по id: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка поиска продукта по id: ", e);
         }
     }
 
@@ -108,7 +109,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка удаления продукта: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка удаления продукта: ", e);
         }
     }
 
@@ -127,7 +128,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
                 while (rs.next()) list.add(mapProduct(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка поиска продуктов по категории: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка поиска продуктов по категории: ", e);
         }
         return list;
     }
@@ -147,7 +148,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
                 while (rs.next()) list.add(mapProduct(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка поиска продуктов по бренду: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка поиска продуктов по бренду: ", e);
         }
         return list;
     }
@@ -169,7 +170,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
                 while (rs.next()) list.add(mapProduct(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка поиска продуктов по диапазону цен: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка поиска продуктов по диапазону цен: ", e);
         }
         return list;
     }
@@ -186,7 +187,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
             if (rs.next()) return Optional.ofNullable(rs.getBigDecimal("min_price"));
             return Optional.empty();
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка получения минимальной цены: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка получения минимальной цены: ", e);
         }
     }
 
@@ -202,7 +203,7 @@ public class JdbcProductRepositoryImpl implements IProductRepository {
             if (rs.next()) return Optional.ofNullable(rs.getBigDecimal("max_price"));
             return Optional.empty();
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка получения максимальной цены: " + e.getMessage(), e);
+            throw new DatabaseException("Ошибка получения максимальной цены: ", e);
         }
     }
 
