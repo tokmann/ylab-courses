@@ -1,0 +1,26 @@
+package ru.ylab.tasks.task4.app;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletRegistration;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
+import ru.ylab.tasks.task4.config.AppConfiguration;
+import ru.ylab.tasks.task4.config.LiquibaseConfiguration;
+
+public class WebAppInitializer implements WebApplicationInitializer {
+
+    @Override
+    public void onStartup(ServletContext servletContext) {
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(AppConfiguration.class, LiquibaseConfiguration.class);
+        servletContext.addListener(new ContextLoaderListener(context));
+
+        DispatcherServlet ds = new DispatcherServlet(context);
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher", ds);
+        dispatcher.setLoadOnStartup(1);
+        dispatcher.addMapping("/");
+    }
+}
+
