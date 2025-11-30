@@ -1,12 +1,15 @@
 package ru.ylab.tasks.task4.config;
 
+
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.ylab.tasks.task4.model.Product;
 import ru.ylab.tasks.task4.model.User;
 import ru.ylab.tasks.task4.repository.IProductRepository;
@@ -24,15 +27,13 @@ import ru.ylab.tasks.task4.service.persistence.UserFileService;
 import ru.ylab.tasks.task4.service.product.IProductService;
 import ru.ylab.tasks.task4.service.product.ProductServiceImpl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Configuration
 @EnableAspectJAutoProxy
 @EnableWebMvc
 @ComponentScan(basePackages = "ru.ylab.tasks.task4")
-public class AppConfiguration {
+public class AppConfiguration implements WebMvcConfigurer {
 
     @Bean("yamlProperties")
     public Properties yamlProperties() {
@@ -87,6 +88,16 @@ public class AppConfiguration {
             }
             default -> throw new IllegalArgumentException("Unknown user repo type");
         };
+    }
+
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/swagger-ui/**")
+                .addResourceLocations("/swagger-ui/");
+
+        registry.addResourceHandler("/openapi.yaml")
+                .addResourceLocations("/");
     }
 
     @Bean

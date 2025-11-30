@@ -1,7 +1,5 @@
 package ru.ylab.tasks.task4.restcontroller;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ylab.tasks.task4.dto.mapper.UserMapper;
 import ru.ylab.tasks.task4.dto.request.user.LoginRequest;
 import ru.ylab.tasks.task4.dto.request.user.RegisterRequest;
-import ru.ylab.tasks.task4.dto.response.common.ErrorResponse;
 import ru.ylab.tasks.task4.dto.response.user.LoginResponse;
 import ru.ylab.tasks.task4.dto.response.user.LogoutResponse;
 import ru.ylab.tasks.task4.model.User;
@@ -86,7 +83,7 @@ public class UserRestController {
         }
 
         User created = userMapper.toEntity(request);
-        return ResponseEntity.ok(userMapper.toResponse(created));
+        return responseHelper.ok(userMapper.toResponse(created));
     }
 
 }

@@ -1,9 +1,6 @@
 package ru.ylab.tasks.task4.restcontroller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.mapstruct.factory.Mappers;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ylab.tasks.task4.constant.ResponseMessages;
@@ -12,7 +9,6 @@ import ru.ylab.tasks.task4.dto.request.product.ProductCreateRequest;
 import ru.ylab.tasks.task4.dto.request.product.ProductDeleteRequest;
 import ru.ylab.tasks.task4.dto.request.product.ProductSearchRequest;
 import ru.ylab.tasks.task4.dto.request.product.ProductUpdateRequest;
-import ru.ylab.tasks.task4.dto.response.common.ErrorResponse;
 import ru.ylab.tasks.task4.dto.response.product.*;
 import ru.ylab.tasks.task4.exception.AccessDeniedException;
 import ru.ylab.tasks.task4.model.Product;
@@ -49,7 +45,6 @@ public class ProductRestController {
         this.responseHelper = responseHelper;
     }
 
-
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest dto) {
 
@@ -80,7 +75,6 @@ public class ProductRestController {
         return responseHelper.created(new ProductCreatedResponse(product.getId(), PRODUCT_CREATE_SUCCESS));
     }
 
-
     @PostMapping("/delete")
     public ResponseEntity<?> deleteProduct(@RequestBody ProductDeleteRequest dto) {
 
@@ -104,8 +98,7 @@ public class ProductRestController {
         return responseHelper.ok(new ProductDeletedResponse(dto.getId(), PRODUCT_DELETED_SUCCESS));
     }
 
-
-    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/list")
     public ResponseEntity<?> getAllProducts() {
 
         if (checkAuth() != null) {
@@ -125,7 +118,6 @@ public class ProductRestController {
 
         return responseHelper.ok(new ProductListResponse(responseList));
     }
-
 
     @PostMapping("/search")
     public ResponseEntity<?> searchProducts(@RequestBody ProductSearchRequest dto) {
@@ -163,7 +155,6 @@ public class ProductRestController {
 
         return responseHelper.ok(new ProductSearchResponse(responseList));
     }
-
 
     @PostMapping("/update")
     public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest dto) {

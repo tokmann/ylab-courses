@@ -14,3 +14,6 @@ liquibase:
   change-log: classpath:db/changelog/db.changelog-master.xml
   default-schema: marketplace
   liquibase-schema: liquibase
+
+resource:
+  packages: ru.ylab.tasks.task4.restcontroller
