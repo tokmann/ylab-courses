@@ -5,7 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
-    <!-- Последовательности -->
     <changeSet id="4-create-sequences" author="tokman">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -19,7 +18,6 @@
         <createSequence sequenceName="product_seq" schemaName="marketplace" startValue="1" incrementBy="1"/>
     </changeSet>
 
-    <!-- Таблица пользователей -->
     <changeSet id="5-create-users-table" author="tokman">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -48,7 +46,6 @@
                 defaultValueSequenceNext="user_seq"/>
     </changeSet>
 
-    <!-- Таблица товаров -->
     <changeSet id="6-create-products-table" author="tokman">
         <preConditions onFail="MARK_RAN">
             <not>
