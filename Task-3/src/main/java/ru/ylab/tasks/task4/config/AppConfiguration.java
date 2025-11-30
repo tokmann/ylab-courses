@@ -28,12 +28,20 @@ import ru.ylab.tasks.task4.service.product.ProductServiceImpl;
 
 import java.util.*;
 
+/**
+ * Основной конфигурационный класс Spring приложения.
+ * Настраивает компоненты, бины и web-инфраструктуру приложения.
+ */
 @Configuration
 @EnableAspectJAutoProxy
 @EnableWebMvc
 @ComponentScan(basePackages = "ru.ylab.tasks.task4")
 public class AppConfiguration implements WebMvcConfigurer {
 
+    /**
+     * Создает бин свойств приложения из YAML файла.
+     * @return Properties с настройками приложения
+     */
     @Bean("yamlProperties")
     public Properties yamlProperties() {
         YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
@@ -41,6 +49,12 @@ public class AppConfiguration implements WebMvcConfigurer {
         return factory.getObject();
     }
 
+    /**
+     * Создает бин источника данных для подключения к базе данных.
+     * Настраивает пул соединений с параметрами из свойств приложения.
+     * @param yamlProperties свойства приложения
+     * @return настроенный DataSource
+     */
     @Bean
     public DataSource dataSource(@Qualifier("yamlProperties") Properties yamlProperties) {
         DataSource pool = new DataSource();
@@ -54,7 +68,13 @@ public class AppConfiguration implements WebMvcConfigurer {
         return pool;
     }
 
-
+    /**
+     * Создает бин репозитория продуктов в зависимости от конфигурации.
+     * Поддерживает JDBC и in-memory реализации репозитория.
+     * @param yamlProperties свойства приложения
+     * @param dataSource источник данных
+     * @return реализация IProductRepository
+     */
     @Bean
     public IProductRepository productRepository(@Qualifier("yamlProperties") Properties yamlProperties, DataSource dataSource) {
         String type = yamlProperties.getProperty("repository.type");
@@ -72,6 +92,13 @@ public class AppConfiguration implements WebMvcConfigurer {
         };
     }
 
+    /**
+     * Создает бин репозитория пользователей в зависимости от конфигурации.
+     * Поддерживает JDBC и in-memory реализации репозитория.
+     * @param yamlProperties свойства приложения
+     * @param dataSource источник данных
+     * @return реализация IUserRepository
+     */
     @Bean
     public IUserRepository userRepository(@Qualifier("yamlProperties") Properties yamlProperties, DataSource dataSource) {
         String type = yamlProperties.getProperty("repository.type");
@@ -89,7 +116,11 @@ public class AppConfiguration implements WebMvcConfigurer {
         };
     }
 
-
+    /**
+     * Настраивает обработчики статических ресурсов для веб-интерфейса.
+     * Регистрирует пути для Swagger UI и OpenAPI спецификации.
+     * @param registry реестр обработчиков ресурсов
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/swagger-ui/**")
@@ -97,21 +128,6 @@ public class AppConfiguration implements WebMvcConfigurer {
 
         registry.addResourceHandler("/openapi.yaml")
                 .addResourceLocations("/");
-    }
-
-    @Bean
-    public IProductService productService(IProductRepository repo) {
-        return new ProductServiceImpl(repo);
-    }
-
-    @Bean
-    public IAuthService authService(IUserRepository repo) {
-        return new AuthServiceImpl(repo);
-    }
-
-    @Bean
-    public IAuditService auditService() {
-        return new AuditServiceImpl();
     }
 }
 

@@ -87,7 +87,12 @@ public class ProductValidator {
         return errors;
     }
 
-
+    /**
+     * Валидирует данные для удаления продукта.
+     * Проверяет наличие идентификатора продукта.
+     * @param dto DTO запроса на удаление продукта
+     * @return список ошибок валидации. Если список пуст, данные считаются валидными
+     */
     public List<String> validateDelete(ProductDeleteRequest dto) {
         List<String> errors = new ArrayList<>();
         if (dto == null || dto.getId() == null) {
@@ -96,6 +101,12 @@ public class ProductValidator {
         return errors;
     }
 
+    /**
+     * Валидирует данные для поиска продуктов.
+     * Проверяет корректность диапазона цен (min <= max).
+     * @param dto DTO запроса на поиск продуктов
+     * @return список ошибок валидации. Если список пуст, данные считаются валидными
+     */
     public List<String> validateSearch(ProductSearchRequest dto) {
         List<String> errors = new ArrayList<>();
         BigDecimal min = ParseUtils.parseBigDecimal(dto.getMinPrice());

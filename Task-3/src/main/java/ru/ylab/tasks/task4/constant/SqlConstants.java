@@ -8,7 +8,6 @@ public final class SqlConstants {
 
     private SqlConstants() {}
 
-    // Query продуктов
     /**
      * SQl запрос для вставки нового продукта
      * */
@@ -70,7 +69,6 @@ public final class SqlConstants {
             "SELECT MAX(price) AS max_price FROM marketplace.products";
 
 
-    // Query пользователей
     /**
      * SQl запрос для добавления нового пользователя
      * */

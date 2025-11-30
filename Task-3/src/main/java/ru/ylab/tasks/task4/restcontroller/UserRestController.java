@@ -19,6 +19,10 @@ import java.util.List;
 
 import static ru.ylab.tasks.task4.constant.ResponseMessages.*;
 
+/**
+ * REST контроллер для управления аутентификацией и пользователями.
+ * Обрабатывает запросы на регистрацию, вход и выход из системы.
+ */
 @RestController
 @RequestMapping("/marketplace/auth")
 public class UserRestController {
@@ -36,6 +40,11 @@ public class UserRestController {
         this.responseHelper = responseHelper;
     }
 
+    /**
+     * Выполняет аутентификацию пользователя в системе.
+     * @param request DTO с данными для входа (логин и пароль)
+     * @return ResponseEntity с результатом операции
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
@@ -53,6 +62,11 @@ public class UserRestController {
         return responseHelper.ok(new LoginResponse(USER_LOGIN_SUCCESS));
     }
 
+    /**
+     * Выполняет выход пользователя из системы.
+     * Требует аутентификации пользователя.
+     * @return ResponseEntity с результатом операции
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
 
@@ -64,6 +78,11 @@ public class UserRestController {
         return responseHelper.ok(new LogoutResponse(USER_LOGOUT_SUCCESS));
     }
 
+    /**
+     * Регистрирует нового пользователя в системе.
+     * @param request DTO с данными для регистрации (логин, пароль, роль)
+     * @return ResponseEntity с результатом операции
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
 

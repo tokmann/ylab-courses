@@ -11,8 +11,17 @@ import org.springframework.web.servlet.DispatcherServlet;
 import ru.ylab.tasks.task4.config.AppConfiguration;
 import ru.ylab.tasks.task4.config.LiquibaseConfiguration;
 
+/**
+ * Класс инициализации веб-приложения Spring MVC.
+ * Настраивает корневой контекст приложения, сервлеты и фильтры.
+ */
 public class WebAppInitializer implements WebApplicationInitializer {
 
+    /**
+     * Настраивает приложение при его запуске.
+     * Регистрирует конфигурационные классы, слушатели, фильтры и сервлеты.
+     * @param servletContext контекст сервлета для настройки
+     */
     @Override
     public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
