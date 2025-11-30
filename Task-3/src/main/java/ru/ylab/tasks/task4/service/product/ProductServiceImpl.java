@@ -1,5 +1,6 @@
 package ru.ylab.tasks.task4.service.product;
 
+import org.springframework.stereotype.Service;
 import ru.ylab.tasks.task4.model.Product;
 import ru.ylab.tasks.task4.repository.IProductRepository;
 import ru.ylab.tasks.task4.util.FilterKey;
@@ -14,6 +15,7 @@ import java.util.*;
  * Сервис для работы с товарами.
  * Содержит бизнес-логику CRUD-операций, поиск с фильтрацией и кеширование результатов поиска.
  */
+@Service
 public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository repo;

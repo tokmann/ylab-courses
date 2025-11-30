@@ -25,6 +25,11 @@ import java.util.stream.Collectors;
 
 import static ru.ylab.tasks.task4.constant.ResponseMessages.*;
 
+/**
+ * REST контроллер для управления продуктами в маркетплейсе.
+ * Обрабатывает запросы на создание, обновление, удаление, поиск и получение продуктов.
+ * Требует аутентификации пользователя для большинства операций.
+ */
 @RestController
 @RequestMapping("/marketplace/products")
 public class ProductRestController {
@@ -45,6 +50,12 @@ public class ProductRestController {
         this.responseHelper = responseHelper;
     }
 
+    /**
+     * Создает новый продукт в системе.
+     * Требует аутентификации и прав администратора.
+     * @param dto DTO с данными для создания продукта
+     * @return ResponseEntity с результатом операции
+     */
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest dto) {
 
@@ -75,6 +86,12 @@ public class ProductRestController {
         return responseHelper.created(new ProductCreatedResponse(product.getId(), PRODUCT_CREATE_SUCCESS));
     }
 
+    /**
+     * Удаляет продукт по идентификатору.
+     * Требует аутентификации и прав администратора.
+     * @param dto DTO с идентификатором продукта для удаления
+     * @return ResponseEntity с результатом операции
+     */
     @PostMapping("/delete")
     public ResponseEntity<?> deleteProduct(@RequestBody ProductDeleteRequest dto) {
 
@@ -98,6 +115,11 @@ public class ProductRestController {
         return responseHelper.ok(new ProductDeletedResponse(dto.getId(), PRODUCT_DELETED_SUCCESS));
     }
 
+    /**
+     * Возвращает список всех продуктов в системе.
+     * Требует аутентификации пользователя.
+     * @return ResponseEntity со списком продуктов
+     */
     @GetMapping(value = "/list")
     public ResponseEntity<?> getAllProducts() {
 
@@ -119,6 +141,12 @@ public class ProductRestController {
         return responseHelper.ok(new ProductListResponse(responseList));
     }
 
+    /**
+     * Выполняет поиск продуктов по заданным критериям.
+     * Требует аутентификации пользователя.
+     * @param dto DTO с критериями поиска (ключевые слова, категория, бренд, диапазон цен)
+     * @return ResponseEntity со списком найденных продуктов
+     */
     @PostMapping("/search")
     public ResponseEntity<?> searchProducts(@RequestBody ProductSearchRequest dto) {
 
@@ -156,6 +184,12 @@ public class ProductRestController {
         return responseHelper.ok(new ProductSearchResponse(responseList));
     }
 
+    /**
+     * Обновляет данные существующего продукта.
+     * Требует аутентификации и прав администратора.
+     * @param dto DTO с данными для обновления продукта
+     * @return ResponseEntity с результатом операции
+     */
     @PostMapping("/update")
     public ResponseEntity<?> updateProduct(@RequestBody ProductUpdateRequest dto) {
 
@@ -186,7 +220,10 @@ public class ProductRestController {
         return responseHelper.ok(new ProductUpdatedResponse(dto.getId(), PRODUCT_UPDATED_SUCCESS));
     }
 
-
+    /**
+     * Проверяет аутентификацию текущего пользователя, обращаясь к authService.
+     * @return ResponseEntity с ошибкой если пользователь не аутентифицирован, иначе null
+     */
     private ResponseEntity<?> checkAuth() {
         if (!authService.isAuthenticated()) {
             return responseHelper.unauthorized(USER_UNAUTHORIZED, "User must be logged in");
@@ -194,7 +231,10 @@ public class ProductRestController {
         return null;
     }
 
-
+    /**
+     * Проверяет наличие прав администратора у текущего пользователя, обращаясь к authService.
+     * @return ResponseEntity с ошибкой если пользователь не администратор, иначе null
+     */
     private ResponseEntity<?> checkRole() {
         try {
             authService.checkAdmin(authService.getCurrentUser());

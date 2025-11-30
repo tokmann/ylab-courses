@@ -1,5 +1,6 @@
 package ru.ylab.tasks.task4.security;
 
+import org.springframework.stereotype.Service;
 import ru.ylab.tasks.task4.constant.Role;
 import ru.ylab.tasks.task4.exception.AccessDeniedException;
 import ru.ylab.tasks.task4.model.User;
@@ -9,6 +10,7 @@ import ru.ylab.tasks.task4.repository.IUserRepository;
  * Сервис авторизации и регистрации пользователей.
  * Управляет текущей сессией пользователя и его ролью.
  */
+@Service
 public class AuthServiceImpl implements IAuthService {
 
     private final IUserRepository userRepository;

@@ -6,15 +6,11 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-import ru.ylab.tasks.task4.constant.Role;
 import ru.ylab.tasks.task4.dto.request.product.ProductCreateRequest;
 import ru.ylab.tasks.task4.dto.request.product.ProductDeleteRequest;
 import ru.ylab.tasks.task4.dto.request.product.ProductUpdateRequest;
 import ru.ylab.tasks.task4.dto.request.user.LoginRequest;
 import ru.ylab.tasks.task4.dto.request.user.RegisterRequest;
-import ru.ylab.tasks.task4.dto.response.product.ProductDeletedResponse;
-import ru.ylab.tasks.task4.dto.response.product.ProductUpdatedResponse;
-import ru.ylab.tasks.task4.model.Product;
 import ru.ylab.tasks.task4.security.IAuthService;
 import ru.ylab.tasks.task4.service.audit.IAuditService;
 
