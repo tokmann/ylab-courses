@@ -8,8 +8,12 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import ru.ylab.tasks.task4.constant.Role;
 import ru.ylab.tasks.task4.dto.request.product.ProductCreateRequest;
+import ru.ylab.tasks.task4.dto.request.product.ProductDeleteRequest;
+import ru.ylab.tasks.task4.dto.request.product.ProductUpdateRequest;
 import ru.ylab.tasks.task4.dto.request.user.LoginRequest;
 import ru.ylab.tasks.task4.dto.request.user.RegisterRequest;
+import ru.ylab.tasks.task4.dto.response.product.ProductDeletedResponse;
+import ru.ylab.tasks.task4.dto.response.product.ProductUpdatedResponse;
 import ru.ylab.tasks.task4.model.Product;
 import ru.ylab.tasks.task4.security.IAuthService;
 import ru.ylab.tasks.task4.service.audit.IAuditService;
@@ -50,8 +54,8 @@ public class AuditAspect {
      */
     @AfterReturning("execution(* ru.ylab.tasks.task4.restcontroller.ProductRestController.updateProduct(..))")
     public void auditUpdateProduct(JoinPoint jp) {
-        Long productId = (Long) jp.getArgs()[0];
-        auditService.log(String.format(PRODUCT_UPDATED, authService.getCurrentUserLogin(), productId));
+        ProductUpdateRequest response = (ProductUpdateRequest) jp.getArgs()[0];
+        auditService.log(String.format(PRODUCT_UPDATED, authService.getCurrentUserLogin(), response.getId()));
     }
 
     /**
@@ -61,8 +65,8 @@ public class AuditAspect {
      */
     @AfterReturning("execution(* ru.ylab.tasks.task4.restcontroller.ProductRestController.deleteProduct(..))")
     public void auditDeleteProduct(JoinPoint jp) {
-        Long productId = (Long) jp.getArgs()[0];
-        auditService.log(String.format(PRODUCT_DELETED, authService.getCurrentUserLogin(), productId));
+        ProductDeleteRequest request = (ProductDeleteRequest) jp.getArgs()[0];
+        auditService.log(String.format(PRODUCT_DELETED, authService.getCurrentUserLogin(), request.getId()));
     }
 
     /**
