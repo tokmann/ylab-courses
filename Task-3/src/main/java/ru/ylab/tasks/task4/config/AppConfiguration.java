@@ -17,14 +17,8 @@ import ru.ylab.tasks.task4.repository.inmemory.InMemoryProductRepositoryImpl;
 import ru.ylab.tasks.task4.repository.inmemory.InMemoryUserRepositoryImpl;
 import ru.ylab.tasks.task4.repository.jdbc.JdbcProductRepositoryImpl;
 import ru.ylab.tasks.task4.repository.jdbc.JdbcUserRepositoryImpl;
-import ru.ylab.tasks.task4.security.AuthServiceImpl;
-import ru.ylab.tasks.task4.security.IAuthService;
-import ru.ylab.tasks.task4.service.audit.AuditServiceImpl;
-import ru.ylab.tasks.task4.service.audit.IAuditService;
 import ru.ylab.tasks.task4.service.persistence.ProductFileService;
 import ru.ylab.tasks.task4.service.persistence.UserFileService;
-import ru.ylab.tasks.task4.service.product.IProductService;
-import ru.ylab.tasks.task4.service.product.ProductServiceImpl;
 
 import java.util.*;
 
