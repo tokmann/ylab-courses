@@ -1,0 +1,17 @@
+repository:
+  type: jdbc
+  products-file: data/products.txt
+  users-file: data/users.txt
+
+db:
+  url: jdbc:postgresql://localhost:5433/marketplace
+  username: mp_user
+  password: mp_pass
+  driver-class-name: org.postgresql.Driver
+
+liquibase:
+  init-schemas: classpath:db/changelog/init-schemas.xml
+  change-log: classpath:db/changelog/db.changelog-master.xml
+  default-schema: marketplace
+  liquibase-schema: liquibase
+
