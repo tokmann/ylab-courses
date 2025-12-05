@@ -12,8 +12,8 @@ import ru.ylab.tasks.task4.dto.request.product.ProductUpdateRequest;
 import ru.ylab.tasks.task4.dto.response.product.*;
 import ru.ylab.tasks.task4.exception.AccessDeniedException;
 import ru.ylab.tasks.task4.model.Product;
-import ru.ylab.tasks.task4.security.IAuthService;
-import ru.ylab.tasks.task4.service.product.IProductService;
+import ru.ylab.tasks.task4.security.AuthService;
+import ru.ylab.tasks.task4.service.product.ProductService;
 import ru.ylab.tasks.task4.util.ParseUtils;
 import ru.ylab.tasks.task4.util.ResponseHelper;
 import ru.ylab.tasks.task4.util.SearchFilter;
@@ -34,14 +34,14 @@ import static ru.ylab.tasks.task4.constant.ResponseMessages.*;
 @RequestMapping("/marketplace/products")
 public class ProductRestController {
 
-    private final IAuthService authService;
-    private final IProductService productService;
+    private final AuthService authService;
+    private final ProductService productService;
     private final ProductValidator productValidator;
     private final ResponseHelper responseHelper;
     private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
 
-    public ProductRestController(IAuthService authService,
-                                 IProductService productService,
+    public ProductRestController(AuthService authService,
+                                 ProductService productService,
                                  ProductValidator productValidator,
                                  ResponseHelper responseHelper) {
         this.authService = authService;

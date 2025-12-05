@@ -11,7 +11,7 @@ import ru.ylab.tasks.task4.dto.request.user.RegisterRequest;
 import ru.ylab.tasks.task4.dto.response.user.LoginResponse;
 import ru.ylab.tasks.task4.dto.response.user.LogoutResponse;
 import ru.ylab.tasks.task4.model.User;
-import ru.ylab.tasks.task4.security.IAuthService;
+import ru.ylab.tasks.task4.security.AuthService;
 import ru.ylab.tasks.task4.util.ResponseHelper;
 import ru.ylab.tasks.task4.util.validation.UserValidator;
 
@@ -27,12 +27,12 @@ import static ru.ylab.tasks.task4.constant.ResponseMessages.*;
 @RequestMapping("/marketplace/auth")
 public class UserRestController {
 
-    private final IAuthService authService;
+    private final AuthService authService;
     private final UserMapper userMapper;
     private final UserValidator userValidator;
     private final ResponseHelper responseHelper;
 
-    public UserRestController(IAuthService authService, UserMapper userMapper,
+    public UserRestController(AuthService authService, UserMapper userMapper,
                               UserValidator userValidator, ResponseHelper responseHelper) {
         this.authService = authService;
         this.userMapper = userMapper;

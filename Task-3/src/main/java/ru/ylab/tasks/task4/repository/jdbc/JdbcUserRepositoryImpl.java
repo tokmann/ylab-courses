@@ -4,7 +4,7 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import ru.ylab.tasks.task4.constant.Role;
 import ru.ylab.tasks.task4.exception.DatabaseException;
 import ru.ylab.tasks.task4.model.User;
-import ru.ylab.tasks.task4.repository.IUserRepository;
+import ru.ylab.tasks.task4.repository.UserRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import static ru.ylab.tasks.task4.constant.SqlConstants.*;
  * Реализация репозитория пользователей на основе JDBC.
  * Обеспечивает операции CRUD для пользователей системы.
  */
-public class JdbcUserRepositoryImpl implements IUserRepository {
+public class JdbcUserRepositoryImpl implements UserRepository {
 
     private final DataSource dataSource;
 

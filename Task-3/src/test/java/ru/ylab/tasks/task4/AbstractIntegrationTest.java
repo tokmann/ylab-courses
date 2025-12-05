@@ -1,9 +1,7 @@
 package ru.ylab.tasks.task4;
 
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +9,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.ylab.tasks.task4.constant.Role;
 import ru.ylab.tasks.task4.model.User;
-import ru.ylab.tasks.task4.security.IAuthService;
-import ru.ylab.tasks.task4.repository.IUserRepository;
-import ru.ylab.tasks.task4.service.product.IProductService;
+import ru.ylab.tasks.task4.security.AuthService;
+import ru.ylab.tasks.task4.repository.UserRepository;
+import ru.ylab.tasks.task4.service.product.ProductService;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -51,18 +48,18 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected WebApplicationContext webApplicationContext;
     protected MockMvc mockMvc;
-    protected IAuthService authService;
-    protected IProductService productService;
-    protected IUserRepository userRepository;
+    protected AuthService authService;
+    protected ProductService productService;
+    protected UserRepository userRepository;
     protected DataSource dataSource;
 
     @BeforeEach
     void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 
-        this.authService = this.webApplicationContext.getBean(IAuthService.class);
-        this.productService = this.webApplicationContext.getBean(IProductService.class);
-        this.userRepository = this.webApplicationContext.getBean(IUserRepository.class);
+        this.authService = this.webApplicationContext.getBean(AuthService.class);
+        this.productService = this.webApplicationContext.getBean(ProductService.class);
+        this.userRepository = this.webApplicationContext.getBean(UserRepository.class);
         this.dataSource = this.webApplicationContext.getBean(DataSource.class);
 
         cleanDatabase();

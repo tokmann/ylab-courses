@@ -6,7 +6,7 @@ import ru.ylab.tasks.task4.util.SearchFilter;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface IProductService {
+public interface ProductService {
 
     /**
      * Создаёт новый товар.

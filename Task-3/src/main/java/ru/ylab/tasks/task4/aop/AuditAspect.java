@@ -11,8 +11,8 @@ import ru.ylab.tasks.task4.dto.request.product.ProductDeleteRequest;
 import ru.ylab.tasks.task4.dto.request.product.ProductUpdateRequest;
 import ru.ylab.tasks.task4.dto.request.user.LoginRequest;
 import ru.ylab.tasks.task4.dto.request.user.RegisterRequest;
-import ru.ylab.tasks.task4.security.IAuthService;
-import ru.ylab.tasks.task4.service.audit.IAuditService;
+import ru.ylab.tasks.task4.security.AuthService;
+import ru.ylab.tasks.task4.service.audit.AuditService;
 
 import static ru.ylab.tasks.task4.constant.AuditMessages.*;
 
@@ -24,10 +24,10 @@ import static ru.ylab.tasks.task4.constant.AuditMessages.*;
 @Component
 public class AuditAspect {
 
-    private final IAuditService auditService;
-    private final IAuthService authService;
+    private final AuditService auditService;
+    private final AuthService authService;
 
-    public AuditAspect(IAuditService auditService, IAuthService authService) {
+    public AuditAspect(AuditService auditService, AuthService authService) {
         this.auditService = auditService;
         this.authService = authService;
     }

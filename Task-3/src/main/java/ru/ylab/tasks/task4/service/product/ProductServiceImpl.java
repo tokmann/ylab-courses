@@ -2,7 +2,7 @@ package ru.ylab.tasks.task4.service.product;
 
 import org.springframework.stereotype.Service;
 import ru.ylab.tasks.task4.model.Product;
-import ru.ylab.tasks.task4.repository.IProductRepository;
+import ru.ylab.tasks.task4.repository.ProductRepository;
 import ru.ylab.tasks.task4.util.FilterKey;
 import ru.ylab.tasks.task4.util.SearchFilter;
 import ru.ylab.tasks.task4.service.performance.LruCache;
@@ -16,12 +16,12 @@ import java.util.*;
  * Содержит бизнес-логику CRUD-операций, поиск с фильтрацией и кеширование результатов поиска.
  */
 @Service
-public class ProductServiceImpl implements IProductService {
+public class ProductServiceImpl implements ProductService {
 
-    private final IProductRepository repo;
+    private final ProductRepository repo;
     private final LruCache<FilterKey, List<Product>> cache = new LruCache<>(50);
 
-    public ProductServiceImpl(IProductRepository repository) {
+    public ProductServiceImpl(ProductRepository repository) {
         this.repo = repository;
     }
 

@@ -3,7 +3,7 @@ package ru.ylab.tasks.task4.repository.jdbc;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import ru.ylab.tasks.task4.exception.DatabaseException;
 import ru.ylab.tasks.task4.model.Product;
-import ru.ylab.tasks.task4.repository.IProductRepository;
+import ru.ylab.tasks.task4.repository.ProductRepository;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -18,7 +18,7 @@ import static ru.ylab.tasks.task4.constant.SqlConstants.*;
  * Реализация репозитория продуктов на основе JDBC.
  * Обеспечивает сохранение, поиск, обновление и удаление продуктов в базе данных.
  */
-public class JdbcProductRepositoryImpl implements IProductRepository {
+public class JdbcProductRepositoryImpl implements ProductRepository {
 
     private final DataSource dataSource;
 

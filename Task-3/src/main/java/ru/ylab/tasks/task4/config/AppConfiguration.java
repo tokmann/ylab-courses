@@ -4,21 +4,18 @@ package ru.ylab.tasks.task4.config;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ru.ylab.tasks.task4.model.Product;
-import ru.ylab.tasks.task4.model.User;
-import ru.ylab.tasks.task4.repository.IProductRepository;
-import ru.ylab.tasks.task4.repository.IUserRepository;
-import ru.ylab.tasks.task4.repository.inmemory.InMemoryProductRepositoryImpl;
-import ru.ylab.tasks.task4.repository.inmemory.InMemoryUserRepositoryImpl;
+import ru.ylab.tasks.task4.repository.ProductRepository;
+import ru.ylab.tasks.task4.repository.UserRepository;
 import ru.ylab.tasks.task4.repository.jdbc.JdbcProductRepositoryImpl;
 import ru.ylab.tasks.task4.repository.jdbc.JdbcUserRepositoryImpl;
-import ru.ylab.tasks.task4.service.persistence.ProductFileService;
-import ru.ylab.tasks.task4.service.persistence.UserFileService;
 
 import java.util.*;
 
@@ -70,18 +67,11 @@ public class AppConfiguration implements WebMvcConfigurer {
      * @return реализация IProductRepository
      */
     @Bean
-    public IProductRepository productRepository(@Qualifier("yamlProperties") Properties yamlProperties, DataSource dataSource) {
+    public ProductRepository productRepository(@Qualifier("yamlProperties") Properties yamlProperties, DataSource dataSource) {
         String type = yamlProperties.getProperty("repository.type");
-        String file = yamlProperties.getProperty("repository.products-file");
 
         return switch (type) {
             case "jdbc" -> new JdbcProductRepositoryImpl(dataSource);
-            case "memory" -> {
-                Collection<Product> initial = (!file.isBlank())
-                        ? new ProductFileService(file).loadProducts()
-                        : List.of();
-                yield new InMemoryProductRepositoryImpl(initial);
-            }
             default -> throw new IllegalArgumentException("Unknown product repo type");
         };
     }
@@ -94,18 +84,11 @@ public class AppConfiguration implements WebMvcConfigurer {
      * @return реализация IUserRepository
      */
     @Bean
-    public IUserRepository userRepository(@Qualifier("yamlProperties") Properties yamlProperties, DataSource dataSource) {
+    public UserRepository userRepository(@Qualifier("yamlProperties") Properties yamlProperties, DataSource dataSource) {
         String type = yamlProperties.getProperty("repository.type");
-        String file = yamlProperties.getProperty("repository.users-file");
 
         return switch (type) {
             case "jdbc" -> new JdbcUserRepositoryImpl(dataSource);
-            case "memory" -> {
-                Collection<User> initial = (!file.isBlank())
-                        ? new UserFileService(file).loadUsers()
-                        : List.of();
-                yield new InMemoryUserRepositoryImpl(initial);
-            }
             default -> throw new IllegalArgumentException("Unknown user repo type");
         };
     }

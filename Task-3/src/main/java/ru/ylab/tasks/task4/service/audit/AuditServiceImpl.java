@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * Отвечает за логирование действий системы (например, авторизация, изменения данных и т.д.)
  */
 @Service
-public class AuditServiceImpl implements IAuditService{
+public class AuditServiceImpl implements AuditService {
 
     /**
      * Логирует сообщение с отметкой времени в консоль.

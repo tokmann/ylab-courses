@@ -6,7 +6,7 @@ import ru.ylab.tasks.task4.model.User;
 /**
  * Интерфейс сервиса аутентификации и регистрации пользователей.
  */
-public interface IAuthService {
+public interface AuthService {
 
     /**
      * Выполняет вход пользователя по логину и паролю.
