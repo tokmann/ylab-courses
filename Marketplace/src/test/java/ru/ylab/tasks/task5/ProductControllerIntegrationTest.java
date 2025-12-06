@@ -1,6 +1,8 @@
 package ru.ylab.tasks.task5;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +33,7 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @DisplayName("Создание продукта: должен вернуть статус Created при корректном запросе")
     void createProduct_ShouldReturnCreated_WhenValidRequest() throws Exception {
         ProductCreateRequest request = new ProductCreateRequest();
         request.setName("Test Product");
@@ -38,6 +41,8 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
         request.setBrand("Test Brand");
         request.setPrice("999.99");
         request.setDescription("Test Description");
+
+        SoftAssertions softly = new SoftAssertions();
 
         mockMvc.perform(post("/marketplace/products/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -47,14 +52,17 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Product created successfully"));
 
         List<Product> products = productService.getAll();
-        assertEquals(1, products.size());
-        assertEquals("Test Product", products.get(0).getName());
+
+        softly.assertThat(products).hasSize(1);
+        softly.assertThat(products.get(0).getName()).isEqualTo("Test Product");
+
+        softly.assertAll();
     }
 
     @Test
+    @DisplayName("Создание продукта: должен вернуть Unauthorized когда пользователь не авторизован")
     void createProduct_ShouldReturnUnauthorized_WhenNotLoggedIn() throws Exception {
         logout();
-
         ProductCreateRequest request = new ProductCreateRequest();
         request.setName("Test Product");
 
@@ -65,6 +73,7 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @DisplayName("Получение всех продуктов: должен вернуть список продуктов для авторизованного пользователя")
     void getAllProducts_ShouldReturnProducts_WhenAuthenticated() throws Exception {
         Product product1 = new Product();
         product1.setName("Product 1");
@@ -80,15 +89,23 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
         product2.setPrice(new BigDecimal("200.00"));
         productService.create(product2);
 
+        SoftAssertions softly = new SoftAssertions();
+
         mockMvc.perform(get("/marketplace/products/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.products").isArray())
                 .andExpect(jsonPath("$.products.length()").value(2))
                 .andExpect(jsonPath("$.products[0].name").value("Product 1"))
                 .andExpect(jsonPath("$.products[1].name").value("Product 2"));
+
+        List<Product> products = productService.getAll();
+        softly.assertThat(products).hasSize(2);
+
+        softly.assertAll();
     }
 
     @Test
+    @DisplayName("Удаление продукта: должен удалить продукт когда удаление выполняет администратор")
     void deleteProduct_ShouldDeleteProduct_WhenAdmin() throws Exception {
         Product product = new Product();
         product.setName("To Delete");
@@ -101,6 +118,8 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
         ProductDeleteRequest request = new ProductDeleteRequest();
         request.setId(productId);
 
+        SoftAssertions softly = new SoftAssertions();
+
         mockMvc.perform(post("/marketplace/products/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -110,10 +129,14 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
         List<Product> products = productService.getAll();
         boolean productExists = products.stream()
                 .anyMatch(p -> p.getId().equals(productId));
-        assertFalse(productExists, "Product should be deleted");
+
+        softly.assertThat(productExists).as("Продукт должен быть удален").isFalse();
+
+        softly.assertAll();
     }
 
     @Test
+    @DisplayName("Поиск продуктов: должен возвращать отфильтрованные результаты по категории")
     void searchProducts_ShouldReturnFilteredResults() throws Exception {
         Product laptop = new Product();
         laptop.setName("Gaming Laptop");
@@ -139,6 +162,8 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
         ProductSearchRequest request = new ProductSearchRequest();
         request.setCategory("Electronics");
 
+        SoftAssertions softly = new SoftAssertions();
+
         mockMvc.perform(post("/marketplace/products/search")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -147,5 +172,10 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.results.length()").value(2))
                 .andExpect(jsonPath("$.results[?(@.name == 'Gaming Laptop')]").exists())
                 .andExpect(jsonPath("$.results[?(@.name == 'Smartphone')]").exists());
+
+        List<Product> allProducts = productService.getAll();
+        softly.assertThat(allProducts).hasSize(3);
+
+        softly.assertAll();
     }
 }
