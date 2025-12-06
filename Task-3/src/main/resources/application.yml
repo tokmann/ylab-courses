@@ -1,7 +1,5 @@
 repository:
   type: jdbc
-  products-file: data/products.txt
-  users-file: data/users.txt
 
 db:
   url: jdbc:postgresql://localhost:5433/marketplace
