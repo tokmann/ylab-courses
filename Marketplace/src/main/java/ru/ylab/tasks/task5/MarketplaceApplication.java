@@ -6,7 +6,6 @@ import ru.ylab.tasks.task5.timing.annotation.EnableLogging;
 
 /**
  * Класс инициализации веб-приложения Spring Boot.
- * Настраивает корневой контекст приложения, сервлеты и фильтры.
  */
 @SpringBootApplication
 @EnableLogging
