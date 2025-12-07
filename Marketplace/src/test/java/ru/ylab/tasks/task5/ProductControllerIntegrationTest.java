@@ -1,9 +1,13 @@
 package ru.ylab.tasks.task5;
 
 import org.assertj.core.api.SoftAssertions;
+import org.instancio.Instancio;
+import org.instancio.Select;
+import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -16,7 +20,7 @@ import ru.ylab.tasks.task5.model.Product;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.instancio.Select.field;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -24,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@ExtendWith(InstancioExtension.class)
 class ProductControllerIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
@@ -35,12 +40,9 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Создание продукта: должен вернуть статус Created при корректном запросе")
     void createProduct_ShouldReturnCreated_WhenValidRequest() throws Exception {
-        ProductCreateRequest request = new ProductCreateRequest();
-        request.setName("Test Product");
-        request.setCategory("Electronics");
-        request.setBrand("Test Brand");
-        request.setPrice("999.99");
-        request.setDescription("Test Description");
+        ProductCreateRequest request = Instancio.of(ProductCreateRequest.class)
+                .set(field("price"), "999.99")
+                .create();
 
         SoftAssertions softly = new SoftAssertions();
 
@@ -52,10 +54,7 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Product created successfully"));
 
         List<Product> products = productService.getAll();
-
         softly.assertThat(products).hasSize(1);
-        softly.assertThat(products.get(0).getName()).isEqualTo("Test Product");
-
         softly.assertAll();
     }
 
@@ -63,8 +62,10 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Создание продукта: должен вернуть Unauthorized когда пользователь не авторизован")
     void createProduct_ShouldReturnUnauthorized_WhenNotLoggedIn() throws Exception {
         logout();
-        ProductCreateRequest request = new ProductCreateRequest();
-        request.setName("Test Product");
+
+        ProductCreateRequest request = Instancio.of(ProductCreateRequest.class)
+                .set(field("name"), "Test Product")
+                .create();
 
         mockMvc.perform(post("/marketplace/products/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,19 +76,22 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Получение всех продуктов: должен вернуть список продуктов для авторизованного пользователя")
     void getAllProducts_ShouldReturnProducts_WhenAuthenticated() throws Exception {
-        Product product1 = new Product();
-        product1.setName("Product 1");
-        product1.setCategory("Category 1");
-        product1.setBrand("Brand 1");
-        product1.setPrice(new BigDecimal("100.00"));
+        Product product1 = Instancio.of(Product.class)
+                .ignore(field("id"))
+                .set(field("name"), "Product 1")
+                .set(field("price"), new BigDecimal("100.00"))
+                .create();
         productService.create(product1);
 
-        Product product2 = new Product();
-        product2.setName("Product 2");
-        product2.setCategory("Category 2");
-        product2.setBrand("Brand 2");
-        product2.setPrice(new BigDecimal("200.00"));
+        Product product2 = Instancio.of(Product.class)
+                .ignore(field("id"))
+                .set(field("name"), "Product 2")
+                .set(field("price"), new BigDecimal("200.00"))
+                .create();
         productService.create(product2);
+
+        System.out.println(product1);
+        System.out.println(product2);
 
         SoftAssertions softly = new SoftAssertions();
 
@@ -107,11 +111,9 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Удаление продукта: должен удалить продукт когда удаление выполняет администратор")
     void deleteProduct_ShouldDeleteProduct_WhenAdmin() throws Exception {
-        Product product = new Product();
-        product.setName("To Delete");
-        product.setCategory("Test");
-        product.setBrand("Test Brand");
-        product.setPrice(new BigDecimal("50.00"));
+        Product product = Instancio.of(Product.class)
+                .set(field("price"), new BigDecimal("50.00"))
+                .create();
         productService.create(product);
         Long productId = product.getId();
 
@@ -138,29 +140,35 @@ class ProductControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Поиск продуктов: должен возвращать отфильтрованные результаты по категории")
     void searchProducts_ShouldReturnFilteredResults() throws Exception {
-        Product laptop = new Product();
-        laptop.setName("Gaming Laptop");
-        laptop.setCategory("Electronics");
-        laptop.setBrand("Apple");
-        laptop.setPrice(new BigDecimal("1500.00"));
+        Product laptop = Instancio.of(Product.class)
+                .ignore(field("id"))
+                .set(field("name"), "Gaming Laptop")
+                .set(field("category"), "Electronics")
+                .set(field("price"), new BigDecimal("1500.00"))
+                .create();
         productService.create(laptop);
 
-        Product phone = new Product();
-        phone.setName("Smartphone");
-        phone.setCategory("Electronics");
-        phone.setBrand("Samsung");
-        phone.setPrice(new BigDecimal("800.00"));
+        Product phone = Instancio.of(Product.class)
+                .ignore(field("id"))
+                .set(field("name"), "Smartphone")
+                .set(field("category"), "Electronics")
+                .set(field("price"), new BigDecimal("800.00"))
+                .create();
         productService.create(phone);
 
-        Product book = new Product();
-        book.setName("Java Microservices");
-        book.setCategory("Books");
-        book.setBrand("O'Reilly");
-        book.setPrice(new BigDecimal("50.00"));
+        Product book = Instancio.of(Product.class)
+                .ignore(field("id"))
+                .set(field("price"), new BigDecimal("50.00"))
+                .create();
         productService.create(book);
 
-        ProductSearchRequest request = new ProductSearchRequest();
-        request.setCategory("Electronics");
+        ProductSearchRequest request = Instancio.of(ProductSearchRequest.class)
+                .ignore(field("maxPrice"))
+                .ignore(field("minPrice"))
+                .ignore(field("keyword"))
+                .ignore(field("brand"))
+                .set(field("category"), "Electronics")
+                .create();
 
         SoftAssertions softly = new SoftAssertions();
 

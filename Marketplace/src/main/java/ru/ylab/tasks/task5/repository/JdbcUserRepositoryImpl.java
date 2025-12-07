@@ -1,10 +1,8 @@
-package ru.ylab.tasks.task5.repository.jdbc;
+package ru.ylab.tasks.task5.repository;
 
-import org.springframework.stereotype.Repository;
 import ru.ylab.tasks.task5.constant.Role;
 import ru.ylab.tasks.task5.exception.DatabaseException;
 import ru.ylab.tasks.task5.model.User;
-import ru.ylab.tasks.task5.repository.UserRepository;
 
 import javax.sql.DataSource;
 import java.sql.*;

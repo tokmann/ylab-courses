@@ -8,6 +8,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Аннотация для включения логирования времени выполнения методов в RestController.
+ * При добавлении этой аннотации к классу конфигурации Spring активируется аспект TimingAspect,
+ * который будет измерять и логировать время выполнения всех методов в классах,
+ * помеченных аннотацией @RestController.
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import(LoggingConfiguration.class)

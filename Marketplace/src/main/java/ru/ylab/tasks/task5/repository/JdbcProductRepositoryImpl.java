@@ -1,9 +1,7 @@
-package ru.ylab.tasks.task5.repository.jdbc;
+package ru.ylab.tasks.task5.repository;
 
-import org.springframework.stereotype.Repository;
 import ru.ylab.tasks.task5.exception.DatabaseException;
 import ru.ylab.tasks.task5.model.Product;
-import ru.ylab.tasks.task5.repository.ProductRepository;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;

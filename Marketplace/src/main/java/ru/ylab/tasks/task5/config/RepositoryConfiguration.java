@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.ylab.tasks.task5.repository.ProductRepository;
 import ru.ylab.tasks.task5.repository.UserRepository;
-import ru.ylab.tasks.task5.repository.jdbc.JdbcProductRepositoryImpl;
-import ru.ylab.tasks.task5.repository.jdbc.JdbcUserRepositoryImpl;
+import ru.ylab.tasks.task5.repository.JdbcProductRepositoryImpl;
+import ru.ylab.tasks.task5.repository.JdbcUserRepositoryImpl;
 import javax.sql.DataSource;
 
 /**

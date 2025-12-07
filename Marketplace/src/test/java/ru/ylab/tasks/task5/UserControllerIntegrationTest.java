@@ -1,6 +1,7 @@
 package ru.ylab.tasks.task5;
 
 import org.assertj.core.api.SoftAssertions;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import ru.ylab.tasks.task5.model.User;
 
 import java.util.Optional;
 
+import static org.instancio.Select.field;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,10 +33,11 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Регистрация первого пользователя: должен создать администратора при корректном запросе")
     void registerFirst_ShouldCreateAdmin_WhenValidRequest() throws Exception {
-        RegisterRequest request = new RegisterRequest();
-        request.setLogin("admin");
-        request.setPassword("admin");
-        request.setRole("ADMIN");
+        RegisterRequest request = Instancio.of(RegisterRequest.class)
+                .set(field("login"), "admin")
+                .set(field("password"), "admin")
+                .set(field("role"), "ADMIN")
+                .create();
 
         SoftAssertions softly = new SoftAssertions();
 
@@ -42,12 +45,12 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.login").value("admin"));
+                .andExpect(jsonPath("$.login").value(request.getLogin()));
 
-        Optional<User> savedUser = userRepository.findByLogin("admin");
+        Optional<User> savedUser = userRepository.findByLogin(request.getLogin());
 
         softly.assertThat(savedUser).isPresent();
-        softly.assertThat(savedUser.get().getLogin()).isEqualTo("admin");
+        softly.assertThat(savedUser.get().getLogin()).isEqualTo(request.getLogin());
         softly.assertThat(savedUser.get().getRole()).isEqualTo(Role.ADMIN);
 
         softly.assertAll();
@@ -57,9 +60,11 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Авторизация: должен вернуть успешный результат при корректных учетных данных")
     void login_ShouldReturnSuccess_WhenValidCredentials() throws Exception {
         createTestUser("testuser", "password123", Role.USER);
-        LoginRequest request = new LoginRequest();
-        request.setLogin("testuser");
-        request.setPassword("password123");
+
+        LoginRequest request = Instancio.of(LoginRequest.class)
+                .set(field("login"), "testuser")
+                .set(field("password"), "password123")
+                .create();
 
         SoftAssertions softly = new SoftAssertions();
 
@@ -77,9 +82,7 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Авторизация: должен вернуть Unauthorized при неверных учетных данных")
     void login_ShouldReturnUnauthorized_WhenInvalidCredentials() throws Exception {
-        LoginRequest request = new LoginRequest();
-        request.setLogin("nonexistent");
-        request.setPassword("wrongpassword");
+        LoginRequest request = Instancio.of(LoginRequest.class).create();
 
         SoftAssertions softly = new SoftAssertions();
 
@@ -120,10 +123,9 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Регистрация: должен создать пользователя с ролью ADMIN при указании роли администратора")
     void register_ShouldCreateAdminUser_WhenAdminRole() throws Exception {
-        RegisterRequest request = new RegisterRequest();
-        request.setLogin("adminuser");
-        request.setPassword("adminpass");
-        request.setRole("ADMIN");
+        RegisterRequest request = Instancio.of(RegisterRequest.class)
+                .set(field("role"), "ADMIN")
+                .create();
 
         SoftAssertions softly = new SoftAssertions();
 
@@ -131,9 +133,9 @@ class UserControllerIntegrationTest extends AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.login").value("adminuser"));
+                .andExpect(jsonPath("$.login").value(request.getLogin()));
 
-        Optional<User> savedUser = userRepository.findByLogin("adminuser");
+        Optional<User> savedUser = userRepository.findByLogin(request.getLogin());
 
         softly.assertThat(savedUser).isPresent();
         softly.assertThat(savedUser.get().getRole()).isEqualTo(Role.ADMIN);
