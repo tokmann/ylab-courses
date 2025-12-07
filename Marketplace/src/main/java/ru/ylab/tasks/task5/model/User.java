@@ -13,7 +13,11 @@ public class User {
     private String password;
     private Role role;
 
+    /**
+     * Для MapStruct
+     * */
     public User() {}
+
 
     public User(Long id, String login, String password, Role role) {
         this.id = id;

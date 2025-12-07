@@ -1,20 +1,17 @@
 package ru.ylab.tasks.task5.dto.request.product;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * DTO для запроса на удаление продукта.
  * Содержит идентификатор продукта для удаления.
  */
+@Data
+@NoArgsConstructor
 public class ProductDeleteRequest {
 
     private Long id;
 
-    public ProductDeleteRequest() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

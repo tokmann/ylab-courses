@@ -1,34 +1,19 @@
 package ru.ylab.tasks.task5.dto.request.user;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * DTO для запроса на аутентификацию пользователя.
  * Содержит учетные данные для входа в систему.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginRequest {
 
     private String login;
     private String password;
 
-    public LoginRequest() {}
-
-    public LoginRequest(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

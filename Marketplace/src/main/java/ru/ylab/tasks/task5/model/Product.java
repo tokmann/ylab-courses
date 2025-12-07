@@ -16,6 +16,9 @@ public class Product {
     private BigDecimal price;
     private String description;
 
+    /**
+     * Для MapStruct
+     * */
     public Product() {}
 
     public Product(String name, String category, String brand, BigDecimal price, String description) {
