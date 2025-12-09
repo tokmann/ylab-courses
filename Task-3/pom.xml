@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.ylab.tasks</groupId>
-    <artifactId>task3</artifactId>
+    <artifactId>task4</artifactId>
     <version>0.0.3</version>
     <packaging>war</packaging>
 
@@ -17,16 +17,18 @@
         <postgresql.version>42.7.8</postgresql.version>
         <testcontainers.pgsql.version>1.21.3</testcontainers.pgsql.version>
         <testcontainers.junit.version>1.21.3</testcontainers.junit.version>
+        <junit-jupiter-api.version>6.0.1</junit-jupiter-api.version>
         <assertj.version>3.24.2</assertj.version>
-        <junit.version>5.10.0</junit.version>
         <jackson-databind.version>2.20.0</jackson-databind.version>
         <jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
-        <aspectj-version>1.9.7</aspectj-version>
-        <aspectj-maven-plugin>1.15.0</aspectj-maven-plugin>
         <tomcat-jdcb.version>10.1.49</tomcat-jdcb.version>
         <aspectj-weaver.version>1.9.21</aspectj-weaver.version>
         <mockito-core.version>5.8.0</mockito-core.version>
         <mockito-junit-jupiter.version>5.8.0</mockito-junit-jupiter.version>
+        <spring-aop.version>7.0.1</spring-aop.version>
+        <spring-web-mcv.version>7.0.1</spring-web-mcv.version>
+        <json-path.version>2.8.0</json-path.version>
+        <spring-test.version>7.0.0</spring-test.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
@@ -50,36 +52,36 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>aspectj-maven-plugin</artifactId>
-                <version>${aspectj-maven-plugin}</version>
-                <configuration>
-                    <proc>none</proc>
-                    <complianceLevel>16</complianceLevel>
-                    <source>16</source>
-                    <target>16</target>
-                    <showWeaveInfo>true</showWeaveInfo>
-                    <verbose>true</verbose>
-                    <Xlint>warning</Xlint>
-                    <encoding>UTF-8</encoding>
-                    <excludes>
-                        <exclude>**/mapper/*.java</exclude>
-                        <exclude>**/dto/**</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${json-path.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring-web-mcv.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring-aop.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -98,13 +100,6 @@
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
             <version>${tomcat-jdcb.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>${aspectj-version}</version>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -167,8 +162,8 @@
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter-api.version}</version>
             <scope>test</scope>
         </dependency>
 
