@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.ylab.tasks.task5.constant.ResponseMessages.*;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_INVALID_MIN_MAX_PRICE;
 
 /**
  * Утилитарный класс для валидации данных продуктов.

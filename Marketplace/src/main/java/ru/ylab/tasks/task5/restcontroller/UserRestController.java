@@ -17,7 +17,10 @@ import ru.ylab.tasks.task5.util.validation.UserValidator;
 
 import java.util.List;
 
-import static ru.ylab.tasks.task5.constant.ResponseMessages.*;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.VALIDATION_FAILED;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.USER_LOGIN_SUCCESS;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.USER_UNAUTHORIZED;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.USER_LOGOUT_SUCCESS;
 
 /**
  * REST контроллер для управления аутентификацией и пользователями.

@@ -2,7 +2,11 @@ package ru.ylab.tasks.task5.restcontroller;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 import ru.ylab.tasks.task5.audit.annotation.Auditable;
 import ru.ylab.tasks.task5.constant.ResponseMessages;
 import ru.ylab.tasks.task5.dto.mapper.ProductMapper;
@@ -10,7 +14,12 @@ import ru.ylab.tasks.task5.dto.request.product.ProductCreateRequest;
 import ru.ylab.tasks.task5.dto.request.product.ProductDeleteRequest;
 import ru.ylab.tasks.task5.dto.request.product.ProductSearchRequest;
 import ru.ylab.tasks.task5.dto.request.product.ProductUpdateRequest;
-import ru.ylab.tasks.task5.dto.response.product.*;
+import ru.ylab.tasks.task5.dto.response.product.ProductDeletedResponse;
+import ru.ylab.tasks.task5.dto.response.product.ProductCreatedResponse;
+import ru.ylab.tasks.task5.dto.response.product.ProductListResponse;
+import ru.ylab.tasks.task5.dto.response.product.ProductResponse;
+import ru.ylab.tasks.task5.dto.response.product.ProductSearchResponse;
+import ru.ylab.tasks.task5.dto.response.product.ProductUpdatedResponse;
 import ru.ylab.tasks.task5.exception.AccessDeniedException;
 import ru.ylab.tasks.task5.model.Product;
 import ru.ylab.tasks.task5.security.AuthService;
@@ -24,7 +33,18 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.ylab.tasks.task5.constant.ResponseMessages.*;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.VALIDATION_FAILED;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_CREATE_FAILED;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.INVALID_DATA;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_CREATE_SUCCESS;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_ID_MISSING;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_DELETE_FAILED;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_DELETED_SUCCESS;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.USER_UNAUTHORIZED;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_INVALID_MIN_MAX_PRICE;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_SEARCH_FAILED;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.PRODUCT_UPDATED_SUCCESS;
+import static ru.ylab.tasks.task5.constant.ResponseMessages.USER_FORBIDDEN;
 
 /**
  * REST контроллер для управления продуктами в маркетплейсе.

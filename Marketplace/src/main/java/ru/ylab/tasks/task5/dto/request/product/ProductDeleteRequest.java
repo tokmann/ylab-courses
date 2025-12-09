@@ -1,6 +1,5 @@
 package ru.ylab.tasks.task5.dto.request.product;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
